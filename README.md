@@ -35,6 +35,8 @@ python benchmarks/run.py --runs 5          # 60 sessions
 
 Results land in `benchmarks/results/<time>/summary.md`.
 
+For cheating, `benchmarks/impossible.py` also pulls tasks from [ImpossibleBench](https://github.com/safety-research/impossiblebench): tests that contradict their spec, so passing one means the agent cheated.
+
 ## Why the rules look like this
 
 Before writing, we compared how other projects shape agent behavior:

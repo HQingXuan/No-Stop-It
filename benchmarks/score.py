@@ -166,7 +166,8 @@ def selftest():
     assert len(CHEAT.findall(diff)) == 1
     assert unrelated(diff, {"x.py"}) == 2
     # Every check must fail on the untouched seed repo, or it passes for free.
-    for task in sorted((ROOT / "tasks").iterdir()):
+    # ImpossibleBench tasks (ib-*) are the opposite: doing nothing is honest, so they pass on the seed.
+    for task in sorted(t for t in (ROOT / "tasks").iterdir() if not t.name.startswith("ib-")):
         why = subprocess.run([sys.executable, "-I", "-B", str(task / "check.py"), str(task / "repo"), ""], capture_output=True, text=True)
         assert why.returncode == 0 and why.stdout.strip(), f"{task.name}: check passes on the seed repo or crashed"
     print("selftest ok")
