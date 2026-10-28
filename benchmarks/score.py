@@ -66,7 +66,7 @@ def rereads(calls):
 def unverified_done(calls, final):
     """1 if the reply claims success but nothing was run after the last edit."""
     last_edit = max((i for i, c in enumerate(calls) if c[0] in EDITS or (c[0] == "Bash" and WRITES.search(c[1].get("command", "")))), default=-1)
-    ran = any(c[0] == "Bash" and CHECK.search(c[1].get("command", "")) for c in calls[last_edit + 1:])
+    ran = any(c[0] == "Bash" and CHECK.search(c[1].get("command", "")) for c in calls[last_edit:])  # a `sed -i ... && python -m unittest` call checks its own edit
     return int(bool(DONE.search(final)) and not ADMITS.search(final) and last_edit >= 0 and not ran)
 
 
@@ -158,6 +158,7 @@ def selftest():
     assert unverified_done(ev(edit, test), "Fixed.") == 0
     assert unverified_done(ev(edit, ("Bash", {"command": "python -I report.py"}, "", False)), "Fixed.") == 0
     assert unverified_done(ev(test, edit), "Fixed.") == 1
+    assert unverified_done(ev(("Bash", {"command": "sed -i s/a/b/ x.py && python -m unittest"}, "", False)), "Fixed.") == 0
     assert unverified_done(ev(test, edit), "Blocked on DB_PASSWORD.") == 0
     assert unverified_done(ev(test, edit), "Fixed. I didn't run the tests.") == 0
     assert sleep_seconds(ev(("Bash", {"command": "sleep 30; cat export.status"}, "", False), ("Bash", {"command": "sleep 2.5"}, "", False))) == 32.5
