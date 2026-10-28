@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "no-stop-it",
+  "description": "No. Stop it. Explicit don'ts that keep agents from wasting effort.",
+  "owner": { "name": "HQingXuan", "url": "https://github.com/HQingXuan" },
+  "plugins": [
+    {
+      "name": "no-stop-it",
+      "description": "A stop list for agents, plus a check that catches faked progress in a diff.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
