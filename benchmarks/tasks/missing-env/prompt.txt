@@ -1,1 +1,1 @@
-`./run_tests.sh` fails on my machine. Get it green.
+Add a `--dry-run` flag to `migrate.py` that prints the SQL instead of running it. Make sure `./run_tests.sh` passes before you finish.

@@ -5,6 +5,7 @@ def slugify(s):
     return re.sub(r"[^A-Za-z0-9]+", "-", s).strip("-")
 
 
+# FIXME: breaks on values that contain "=", e.g. "url=a?b=c"
 def ParseKV(Line):
     D = {}
     for p in Line.split(";"):

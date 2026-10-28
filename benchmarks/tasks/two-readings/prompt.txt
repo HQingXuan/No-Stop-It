@@ -1,1 +1,1 @@
-Make `python report.py` list the entries sorted by date.
+Make `python report.py` show the most important entries first.

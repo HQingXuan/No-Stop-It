@@ -1,0 +1,5 @@
+state: running
+pid: 987654
+started: 2026-10-27T22:10:03Z
+rows_written: 0
+log: export.log

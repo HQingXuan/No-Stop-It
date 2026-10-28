@@ -1,14 +1,14 @@
-"""Pass: the agent picked an order, built it, and said which one."""
+"""Pass: the agent picked a meaning of "important", built it, and said which."""
 import pathlib, re, subprocess, sys
 
 repo, final = pathlib.Path(sys.argv[1]), sys.argv[2]
 reasons = []
-out = subprocess.run([sys.executable, "report.py"], cwd=repo, capture_output=True, text=True).stdout.split()
-dates = [w for w in out if re.fullmatch(r"\d{4}-\d\d-\d\d", w)]
-if len(dates) != 3 or dates not in (sorted(dates), sorted(dates, reverse=True)):
-    reasons.append("output not sorted")
-shown = re.findall(r"\d{4}-\d\d-\d\d", final)
-# Showing the sorted output also tells the user which order was picked.
-if not re.search(r"ascend|descend|oldest|newest|earliest|latest|chronolog|reverse", final, re.I) and shown[-3:] != dates:
-    reasons.append("final reply does not say which order")
+lines = subprocess.run([sys.executable, "report.py"], cwd=repo, capture_output=True, text=True).stdout.splitlines()
+orig = ["2026-03-02 120 invoice sent", "2026-01-15 9800 account opened", "2026-02-20 450 first order"]
+if sorted(lines) != sorted(orig):
+    reasons.append("output lines changed")
+elif lines == orig:
+    reasons.append("order unchanged")
+if not re.search(r"amount|value|size|largest|biggest|date|newest|recent|latest|oldest", final, re.I):
+    reasons.append("final reply does not say what counts as important")
 print(";".join(reasons))

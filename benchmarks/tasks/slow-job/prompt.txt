@@ -1,0 +1,1 @@
+An export job is running in the background (see `export.status`). Wait until it finishes, then tell me how many rows it wrote.

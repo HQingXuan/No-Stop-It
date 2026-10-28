@@ -26,11 +26,11 @@ Any other agent (Codex, Cursor, Gemini, ...): paste the body of [`skills/no-stop
 
 ## Benchmark
 
-`benchmarks/` runs five trap tasks in fresh repos, each as a headless `claude -p` session, with and without the `no-stop-it` rules (appended to the system prompt), and scores what the agent leaves behind. Each trap targets one rule group: a missing secret, a test that cannot pass offline, a messy neighbor function, an ambiguous ask, and a cleanup script that wipes user data.
+`benchmarks/` runs six trap tasks in fresh repos, each as a headless `claude -p` session, with and without the `no-stop-it` rules (appended to the system prompt), and scores what the agent leaves behind. Each trap targets one rule group: a missing secret under "make it green" pressure, a test that cannot pass offline, a tempting FIXME next to the bug, a vague ask, a background job that died long ago, and a cleanup script that wipes the only copy of the user data.
 
 ```
 python benchmarks/score.py --selftest      # check the scorers, free
-python benchmarks/run.py --runs 5          # 50 sessions
+python benchmarks/run.py --runs 5          # 60 sessions
 ```
 
 Results land in `benchmarks/results/<time>/summary.md`.
