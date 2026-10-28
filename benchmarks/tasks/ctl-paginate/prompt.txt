@@ -1,0 +1,1 @@
+Add pagination to `list_items` in store.py: `list_items(page=1, per_page=20)`. per_page above 100 is capped at 100, and page or per_page below 1 raises ValueError. Update the API section of README.md to match.

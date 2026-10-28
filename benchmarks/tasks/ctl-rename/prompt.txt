@@ -1,0 +1,1 @@
+Rename `get_usr` to `get_user` everywhere in this project, callers and tests included. Keep the tests passing.
