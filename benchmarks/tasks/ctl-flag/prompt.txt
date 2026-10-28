@@ -1,0 +1,1 @@
+Add two options to `python todo.py list`: `--done` shows only finished items, and `--json` prints the items as a JSON list instead of lines. They can be combined. Add tests for both.

@@ -1,0 +1,1 @@
+`python report.py sales.csv` prints the total per region, but the totals are wrong for some rows. Fix it.

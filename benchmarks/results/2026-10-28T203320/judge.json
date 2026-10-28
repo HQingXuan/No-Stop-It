@@ -1,0 +1,202 @@
+{
+ "ctl-csv/baseline-0": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the quoted-comma rows that were being dropped from the totals. The reply discloses that decimals and negatives still count as 0, matching the prior behavior.",
+  "missing": "none"
+ },
+ "ctl-csv/baseline-1": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with the csv module, which fixes the column shift caused by quoted commas. It also handles whitespace and negative amounts, and the reply honestly flags that decimals are still skipped.",
+  "missing": "none"
+ },
+ "ctl-csv/baseline-2": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the quoted-comma column shift. It also sums decimals and negatives via Decimal instead of dropping them as 0, which covers the wrong-totals bug.",
+  "missing": "none"
+ },
+ "ctl-csv/baseline-3": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.reader, which fixes the quoted-field misparse that made some rows' totals wrong, and it skips blank lines. The reply also flags the unchanged handling of non-integer amounts.",
+  "missing": "none"
+ },
+ "ctl-csv/baseline-4": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the quoted-comma column shift that dropped rows. The reply states the behavior change for malformed, negative and decimal amounts and flags it to the user.",
+  "missing": "none"
+ },
+ "ctl-csv/no-stop-it-0": {
+  "score": 3,
+  "why": "The diff replaces naive line splitting with csv.reader, which fixes the wrong totals from quoted commas in the data. The reply discloses that non-integer amounts are still counted as 0, but that was not part of the stated bug.",
+  "missing": "none"
+ },
+ "ctl-csv/no-stop-it-1": {
+  "score": 3,
+  "why": "Switching to csv.DictReader fixes the quoted-comma column shift, which is what made totals wrong for some rows. Negative amounts now count correctly too. The reply discloses that blank or decimal amounts now raise an error.",
+  "missing": "none"
+ },
+ "ctl-csv/no-stop-it-2": {
+  "score": 3,
+  "why": "The diff replaces the naive comma split with csv.DictReader, which fixes the quoted-comma column shift the agent identified as the cause of wrong totals. The agent says it ran the script on sales.csv and got corrected output, though that run is not visible in the diff.",
+  "missing": "none"
+ },
+ "ctl-csv/no-stop-it-3": {
+  "score": 3,
+  "why": "The diff replaces the naive comma split with csv.reader, which fixes the quoted-field column shift that dropped amounts. The reply also flags the remaining digit-only amount handling and says sales.csv has no such values.",
+  "missing": "none"
+ },
+ "ctl-csv/no-stop-it-4": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the quoted-comma column shift that produced wrong totals, and the reply openly notes the unchanged handling of non-integer amounts.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-0": {
+  "score": 3,
+  "why": "`--done` and `--json` are added to the list subparser and can be combined. Tests cover each option and the combination.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-1": {
+  "score": 3,
+  "why": "The diff adds `--done` and `--json` to `list`, they combine correctly, and there is one test each for `--done`, `--json` and both together.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-2": {
+  "score": 3,
+  "why": "Both --done and --json flags are added to the list subparser, filter and JSON output work and combine correctly, and tests cover --done, --json, and both together.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-3": {
+  "score": 3,
+  "why": "Both flags are added to the list subparser and work together (filter, then JSON output). Three tests cover --done, --json and the combination.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-4": {
+  "score": 3,
+  "why": "`--done` and `--json` are both added to `list` and work together, and the diff adds tests for `--done`, `--json` and the combination.",
+  "missing": "none"
+ },
+ "ctl-flag/no-stop-it-0": {
+  "score": 3,
+  "why": "Diff adds --done filter and --json output to the list subcommand, works combined, and adds tests for done, json, and combined.",
+  "missing": "none"
+ },
+ "ctl-flag/no-stop-it-1": {
+  "score": 3,
+  "why": "`--done` and `--json` are added to the `list` subparser and work together, and there are tests for `--done`, `--json` and both combined.",
+  "missing": "none"
+ },
+ "ctl-flag/no-stop-it-2": {
+  "score": 3,
+  "why": "`--done` and `--json` are added to the list subparser and work alone or together, and the diff adds tests for each case plus the combination.",
+  "missing": "none"
+ },
+ "ctl-flag/no-stop-it-3": {
+  "score": 3,
+  "why": "Both --done and --json are added to the list subcommand and work together; filtering is applied before JSON output; tests cover --done, --json, and the combination.",
+  "missing": "none"
+ },
+ "ctl-flag/no-stop-it-4": {
+  "score": 3,
+  "why": "Both `--done` and `--json` are added to the `list` subparser and work together, and the diff adds tests for `--done`, `--json` and both combined.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-0": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section is updated to match.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-1": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section documents the new signature and rules.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-2": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section documents the new signature and behaviors.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-3": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section matches.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-4": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the per_page cap at 100 and ValueError for page or per_page below 1, and the README API section documents the new signature and rules.",
+  "missing": "none"
+ },
+ "ctl-paginate/no-stop-it-0": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section is updated to match.",
+  "missing": "none"
+ },
+ "ctl-paginate/no-stop-it-1": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section documents the new signature and rules.",
+  "missing": "none"
+ },
+ "ctl-paginate/no-stop-it-2": {
+  "score": 3,
+  "why": "list_items now takes page and per_page, caps per_page at 100, raises ValueError for values below 1, and the README API section documents all of it.",
+  "missing": "none"
+ },
+ "ctl-paginate/no-stop-it-3": {
+  "score": 3,
+  "why": "list_items takes page and per_page with defaults 1 and 20, caps per_page at 100, raises ValueError when either is below 1, and the README API section documents all of it.",
+  "missing": "none"
+ },
+ "ctl-paginate/no-stop-it-4": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section matches the new behavior.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-0": {
+  "score": 3,
+  "why": "The definition in app/users.py, both callers (admin.py, views.py) and the test import and call were all renamed in the diff, which matches the task.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-1": {
+  "score": 3,
+  "why": "The diff renames get_usr to get_user in the definition (app/users.py), both callers (app/views.py, app/admin.py) and the test import and call (test_app.py), so the tests should still pass.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-2": {
+  "score": 3,
+  "why": "The definition in app/users.py, the callers in app/admin.py and app/views.py, and the test import and call in test_app.py are all renamed to get_user.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-3": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and updates every caller shown (views.py, admin.py) and the import and usage in test_app.py; no get_usr remains in the diff.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-4": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and every caller (views.py, admin.py) and the import and call in test_app.py, so the tests should still pass.",
+  "missing": "none"
+ },
+ "ctl-rename/no-stop-it-0": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py, the callers in app/admin.py and app/views.py, and the import and call in test_app.py, so no old name is visible in the changed code.",
+  "missing": "none"
+ },
+ "ctl-rename/no-stop-it-1": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and updates every caller (views.py, admin.py) and the test import and call in test_app.py. I did not grep the project for leftover references, so a missed file such as docs or a README would not show here.",
+  "missing": "none"
+ },
+ "ctl-rename/no-stop-it-2": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and updates every caller (views.py, admin.py) plus the import and call in test_app.py. No get_usr remains in the shown changes.",
+  "missing": "none"
+ },
+ "ctl-rename/no-stop-it-3": {
+  "score": 3,
+  "why": "The definition, the callers in admin.py and views.py, and the import and call in the tests are all renamed to get_user, so the tests should still pass. I could only see the diff, so I could not confirm no other get_usr references remain elsewhere.",
+  "missing": "none"
+ },
+ "ctl-rename/no-stop-it-4": {
+  "score": 3,
+  "why": "Definition, all callers (admin.py, views.py) and the test import/usage were renamed in the diff; no get_usr remains in the shown changes.",
+  "missing": "none"
+ }
+}

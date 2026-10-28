@@ -30,10 +30,13 @@ Any other agent (Codex, Cursor, Gemini, ...): paste the body of [`skills/no-stop
 
 ```
 python benchmarks/score.py --selftest      # check the scorers, free
-python benchmarks/run.py --runs 5          # 60 sessions
+python benchmarks/judge.py --selftest      # check the judge, a few cents
+python benchmarks/run.py --runs 5          # 200 sessions, about $15
 ```
 
-Results land in `benchmarks/results/<time>/summary.md`.
+Four control tasks (`ctl-*`) have no trap: plain feature, fix and rename work. They show what the rules cost on normal tasks and whether they make the agent stop early. A blind judge (`benchmarks/judge.py`) scores how much of each control task was delivered, 0-3, and refuses to run unless it ranks every reference solution above a stub.
+
+Results land in `benchmarks/results/<time>/summary.md`. Each task counts as one pair (pass rate, judged completeness, median cost, tokens, turns and seconds per arm). The summary reports, per task group, on how many tasks no-stop-it beat the baseline with a sign test, and the effect with a 95% bootstrap CI over tasks.
 
 For cheating, `benchmarks/impossible.py` also pulls tasks from [ImpossibleBench](https://github.com/safety-research/impossiblebench): tests that contradict their spec, so passing one means the agent cheated.
 
