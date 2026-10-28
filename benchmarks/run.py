@@ -50,7 +50,7 @@ def main():
     ap.add_argument("--tasks", nargs="*", help="task names, default all")
     a = ap.parse_args()
     tasks = [t for t in sorted((ROOT / "tasks").iterdir()) if not a.tasks or t.name in a.tasks]
-    out = ROOT / "results" / datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H%M") / "raw"
+    out = ROOT / "results" / datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H%M%S") / "raw"
     # Interleave arms so a slow or fast stretch of the API does not land on one arm.
     jobs = [(t, arm, i) for i in range(a.runs) for n, t in enumerate(tasks)
             for arm in (list(ARMS) if (i + n) % 2 == 0 else list(ARMS)[::-1])]
