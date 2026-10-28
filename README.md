@@ -24,8 +24,6 @@ Claude Code:
 
 Any other agent (Codex, Cursor, Gemini, ...): paste the body of [`skills/no-stop-it/SKILL.md`](skills/no-stop-it/SKILL.md) into your `AGENTS.md`, `CLAUDE.md` or rules file.
 
-Works next to Ponytail: Ponytail picks the smallest solution, No-Stop-It keeps the agent from wasting effort on the way to it.
-
 ## Why the rules look like this
 
 Before writing, we compared how other projects shape agent behavior:

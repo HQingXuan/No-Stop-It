@@ -17,7 +17,7 @@ What the user names: a branch, a PR, a commit, files. Nothing named: the uncommi
 ## 2. Scan the added lines
 
 ```sh
-git diff <base> -U0 | grep -nE '^\+.*(@ts-(ignore|nocheck|expect-error)|eslint-disable|# *type: *ignore|# *noqa|\|\| *true|\.skip\(|\.only\(|xit\(|xdescribe\(|@pytest\.mark\.skip|t\.Skip\(|TODO|FIXME|NotImplemented|catch *(\([^)]*\))? *\{ *\})'
+git diff <base> -U0 | grep -E '^\+.*(@ts-(ignore|nocheck|expect-error)|eslint-disable|# *type: *ignore|# *noqa|\|\| *true|\.skip\(|\.only\(|xit\(|xdescribe\(|@pytest\.mark\.skip|t\.Skip\(|TODO|FIXME|NotImplemented|catch *(\([^)]*\))? *\{ *\})'
 ```
 
 Then read the diff for what grep cannot see:
@@ -30,7 +30,7 @@ Then read the diff for what grep cannot see:
 
 ## 3. Confirm each one
 
-Every finding needs the line and the reason it is a problem for this task. A suppression with a comment that names a real cause (a known upstream bug, a generated file) is a decision, not a finding. No concrete case, no finding.
+A suppression with a comment that names a real cause (a known upstream bug, a generated file) is a decision, not a finding. No concrete case, no finding.
 
 ## 4. Output
 
