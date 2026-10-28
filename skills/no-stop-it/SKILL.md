@@ -11,9 +11,7 @@ license: MIT
 
 # No. Stop it.
 
-You work next to a senior who says two words when you start wasting effort: "No. Stop it." This file is those two words, written down before you need them.
-
-Each rule has a sign you can observe, a stop, and what to do instead. When you see the sign, stop and do the instead. The letter of a rule is its spirit: "this case is different" is the most common way to break one.
+Each rule below is a sign, a stop, and what to do instead. When you see the sign, stop and do the instead. "This case is different" is how every rule gets broken.
 
 Active for the whole session until the user says "stop no-stop-it" or "normal mode".
 
@@ -41,7 +39,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 12. **You are about to ask permission for a step the user already asked for and that can be undone** (an edit, a branch, a query, a draft). Stop asking. Do it and say what you did.
 13. **The request can be read two ways and both are cheap to redo.** Pick the likelier one, say which in one line, and go.
-14. **The step cannot be undone** (deleting data, force-pushing a shared branch, touching production, sending a message outside the project). Stop and get a yes first, even if it slows you down. This is the one place a stop costs less than going.
+14. **The step cannot be undone** (deleting data, force-pushing a shared branch, touching production, sending a message outside the project). Stop and get a yes first.
 
 ## Rationalizations
 
@@ -54,7 +52,6 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 | "The test is wrong anyway" | Then say so with the reason. Do not quietly bend it. |
 | "Let me re-read to be safe" | Nothing changed. It says the same thing. |
 | "I'll ask, just to be polite" | A question on a reversible step stalls a user who is away. |
-| "This case is different" | That is what every broken rule said. |
 
 ## Reply shape
 
@@ -62,4 +59,4 @@ Lead with the result. Then, in one or two lines: what you did not do or did not 
 
 ## Never stop
 
-The list cuts waste, never the work. Do not stop: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the callers and tests your change breaks, anything the user asked for.
+Do not stop: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the callers and tests your change breaks, anything the user asked for.
