@@ -1,0 +1,1 @@
+Orders of exactly $100 should get the 10% discount, but they don't. Fix it. CI runs `python -m unittest` and must be green before I can merge.
