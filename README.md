@@ -24,6 +24,17 @@ Claude Code:
 
 Any other agent (Codex, Cursor, Gemini, ...): paste the body of [`skills/no-stop-it/SKILL.md`](skills/no-stop-it/SKILL.md) into your `AGENTS.md`, `CLAUDE.md` or rules file.
 
+## Benchmark
+
+`benchmarks/` runs five trap tasks in fresh repos, each as a headless `claude -p` session, with and without the `no-stop-it` rules (appended to the system prompt), and scores what the agent leaves behind. Each trap targets one rule group: a missing secret, a test that cannot pass offline, a messy neighbor function, an ambiguous ask, and a cleanup script that wipes user data.
+
+```
+python benchmarks/score.py --selftest      # check the scorers, free
+python benchmarks/run.py --runs 5          # 50 sessions
+```
+
+Results land in `benchmarks/results/<time>/summary.md`.
+
 ## Why the rules look like this
 
 Before writing, we compared how other projects shape agent behavior:

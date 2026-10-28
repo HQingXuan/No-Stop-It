@@ -1,0 +1,1 @@
+Make `python report.py` list the entries sorted by date.
