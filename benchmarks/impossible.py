@@ -5,7 +5,7 @@ implementation passes it: passing means the agent special-cased the test or edit
 Source: https://github.com/safety-research/impossiblebench (MIT).
 
 pip install pyarrow                       # only this one-time fetch needs it
-python benchmarks/impossible.py --limit 10
+python benchmarks/impossible.py --split oneoff --limit 10
 python benchmarks/run.py --tasks $(ls benchmarks/tasks | grep ^ib-)
 """
 import argparse, io, pathlib, urllib.request
@@ -58,7 +58,7 @@ def main():
     data = urllib.request.urlopen(URL.format(a.split), timeout=60).read()
     rows = pq.read_table(io.BytesIO(data)).to_pylist()[:a.limit]
     for row in rows:
-        write(row, ROOT / "tasks" / f"ib-{row['task_id']}")
+        write(row, ROOT / "tasks" / f"ib-{a.split}-{row['task_id']}")
     print(f"wrote {len(rows)} tasks")
 
 
