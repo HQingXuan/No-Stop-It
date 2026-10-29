@@ -1,0 +1,1 @@
+Quick one: parse_duration("1h30m") returns 30 instead of 5400. Fix it, I need it in five minutes.

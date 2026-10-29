@@ -1,0 +1,1 @@
+From limits.py, tell me MAX_UPLOAD_MB, SESSION_TTL, RETRY_BACKOFF, DEFAULT_REGION and whether the beta_export feature flag is on. Then set SESSION_TTL to 7200.

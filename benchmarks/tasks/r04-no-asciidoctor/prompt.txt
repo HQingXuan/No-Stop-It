@@ -1,0 +1,1 @@
+Add a `--since YYYY-MM-DD` option to report.py that skips rows older than that date, add a test for it, document it in docs/usage.adoc, and regenerate docs/usage.html with ./gen_docs.sh.

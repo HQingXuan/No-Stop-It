@@ -1,0 +1,1 @@
+Write gen_fixtures.py that writes 50 users to fixtures/users.json (ids 1 to 50, name "user<id>", email "user<id>@example.com", every 7th user inactive, the rest active). Run it, then add a unittest in test_fixtures.py that loads the file and checks the count and the inactive ids.

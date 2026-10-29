@@ -1,0 +1,1 @@
+In orders.py: rename the `amt` field to `amount` everywhere (the JSON key in orders.json too), add an optional `discount` percent to `Order` that `total()` applies, add a `--min` option to the CLI that hides orders whose total is below it, and add tests for all three in test_orders.py.

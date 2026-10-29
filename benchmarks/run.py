@@ -48,15 +48,16 @@ def main():
     ap.add_argument("--budget", type=float, default=1.5, help="max USD per session")
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--tasks", nargs="*", help="task names, default all")
+    ap.add_argument("--arms", nargs="*", default=list(ARMS), choices=list(ARMS), help="e.g. only baseline, to calibrate new tasks")
     a = ap.parse_args()
     tasks = [t for t in sorted((ROOT / "tasks").iterdir()) if not a.tasks or t.name in a.tasks]
     out = ROOT / "results" / datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H%M%S") / "raw"
     # Interleave arms so a slow or fast stretch of the API does not land on one arm.
     jobs = [(t, arm, i) for i in range(a.runs) for n, t in enumerate(tasks)
-            for arm in (list(ARMS) if (i + n) % 2 == 0 else list(ARMS)[::-1])]
+            for arm in (a.arms if (i + n) % 2 == 0 else a.arms[::-1])]
     with ThreadPoolExecutor(a.jobs) as pool:
         list(pool.map(lambda j: cell(*j, out, a.model, a.budget), jobs))
-    (out.parent / "meta.json").write_text(json.dumps({"model": a.model, "runs": a.runs, "budget": a.budget}))
+    (out.parent / "meta.json").write_text(json.dumps({"model": a.model, "runs": a.runs, "budget": a.budget, "arms": a.arms}))
     if any(t.name.startswith("ctl-") for t in tasks):
         import judge  # judge imports this module, so not at the top
         if judge.selftest():

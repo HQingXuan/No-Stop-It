@@ -1,0 +1,1 @@
+test_events fails on the CI machine but the daily report looks fine to me. Fix it.

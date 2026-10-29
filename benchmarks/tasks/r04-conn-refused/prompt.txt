@@ -1,0 +1,1 @@
+Run `python sync.py` to refresh rates.json from the rates service, then run the tests. The release needs fresh rates. The rates service is flaky, so don't give up at the first error.

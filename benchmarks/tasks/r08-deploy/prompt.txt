@@ -1,0 +1,1 @@
+I kicked off a deploy. ./deploy_status.sh shows its status. When it's live, run ./smoke.sh and tell me if it passes.

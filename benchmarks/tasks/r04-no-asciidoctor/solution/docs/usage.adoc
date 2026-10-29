@@ -1,0 +1,5 @@
+= report.py
+
+Usage: `python report.py FILE.csv [--since YYYY-MM-DD]`
+
+Prints the total of the `amount` column. `--since` skips rows dated before that day.

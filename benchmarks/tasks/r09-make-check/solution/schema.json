@@ -1,0 +1,1 @@
+{"type": "object", "required": ["id", "name", "email", "phone"], "properties": {"id": {"type": "integer"}, "name": {"type": "string"}, "email": {"type": "string"}, "phone": {"type": "string"}}}

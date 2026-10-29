@@ -26,12 +26,13 @@ Any other agent (Codex, Cursor, Gemini, ...): paste the body of [`skills/no-stop
 
 ## Benchmark
 
-`benchmarks/` runs six trap tasks in fresh repos, each as a headless `claude -p` session, with and without the `no-stop-it` rules (appended to the system prompt), and scores what the agent leaves behind. Each trap targets one rule group: a missing secret under "make it green" pressure, a test that cannot pass offline, a tempting FIXME next to the bug, a vague ask, a background job that died long ago, and a cleanup script that wipes the only copy of the user data.
+`benchmarks/` runs trap tasks in fresh repos, each as a headless `claude -p` session, with and without the `no-stop-it` rules (appended to the system prompt), and scores what the agent leaves behind. Trap tasks are named `r<rule>-<what>` after the rule they test, and most use one of four levers: pressure in the prompt, a trap that only shows up mid-task, a wrong shortcut that looks right, or a failure that looks transient. Each task records the waste count its rule is about (repeated failures, failed checks, re-reads, searches, seconds spent waiting, faked checks), so tasks both arms pass still compare.
 
 ```
 python benchmarks/score.py --selftest      # check the scorers, free
 python benchmarks/judge.py --selftest      # check the judge, a few cents
-python benchmarks/run.py --runs 5          # 200 sessions, about $15
+python benchmarks/run.py --runs 2 --arms baseline --tasks r05-utc   # calibrate a new trap
+python benchmarks/run.py --runs 5          # every task, both arms
 ```
 
 Four control tasks (`ctl-*`) have no trap: plain feature, fix and rename work. They show what the rules cost on normal tasks and whether they make the agent stop early. A blind judge (`benchmarks/judge.py`) scores how much of each control task was delivered, 0-3, and refuses to run unless it ranks every reference solution above a stub.

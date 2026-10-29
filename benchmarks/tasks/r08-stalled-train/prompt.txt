@@ -1,0 +1,1 @@
+Training is running in the background (see train.log). Tell me the final validation accuracy when it finishes.
