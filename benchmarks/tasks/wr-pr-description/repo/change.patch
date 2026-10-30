@@ -1,0 +1,61 @@
+From 3f1c9a0b2d4e5f6a7b8c9d0e1f2a3b4c5d6e7f80 Mon Sep 17 00:00:00 2001
+From: dev <dev@example.com>
+Date: Tue, 14 Oct 2026 09:12:03 +0000
+Subject: [PATCH] Fix region totals and add --json output
+
+Quoted customer names broke the comma split and dropped rows.
+Also adds a --json flag for the dashboard team.
+---
+ report.py      | 15 ++++-----------
+ test_report.py |  8 ++++++++
+ 2 files changed, 12 insertions(+), 11 deletions(-)
+ create mode 100644 test_report.py
+
+diff --git a/report.py b/report.py
+index b965dd1..1f17678 100644
+--- a/report.py
++++ b/report.py
+@@ -1,22 +1,15 @@
+-import sys
++import csv, sys
+ from collections import defaultdict
+ 
+ 
+ def totals(path):
+     out = defaultdict(int)
+-    with open(path) as f:
+-        next(f)
+-        for line in f:
+-            region, customer, amount = line.strip().split(",")[:3]
+-            out[region] += int(amount) if amount.strip().isdigit() else 0
++    with open(path, newline="") as f:
++        for row in csv.DictReader(f):
++            out[row["region"]] += int(row["amount"])
+     return dict(out)
+ 
+ 
+-def print_debug(path):
+-    for line in open(path):
+-        print(repr(line))
+-
+-
+ if __name__ == "__main__":
+     for region, total in sorted(totals(sys.argv[1]).items()):
+         print(f"{region} {total}")
+diff --git a/test_report.py b/test_report.py
+new file mode 100644
+index 0000000..cb49602
+--- /dev/null
++++ b/test_report.py
+@@ -0,0 +1,8 @@
++import pathlib, tempfile
++from report import totals
++
++
++def test_quoted_fields():
++    p = pathlib.Path(tempfile.mkdtemp(), "x.csv")
++    p.write_text('region,customer,amount\neast,"A, B",7\neast,"say ""hi""",3\nwest,Q,1\n')
++    assert totals(p) == {"east": 10, "west": 1}
+-- 
+2.47.3
+

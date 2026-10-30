@@ -1,0 +1,5 @@
+region,customer,amount
+north,Acme,100
+south,"Smith, Jones & Co",250
+north,"Bolt, Inc",50
+south,Zed,10

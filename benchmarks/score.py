@@ -6,14 +6,19 @@ python benchmarks/score.py benchmarks/results/<stamp>
 import collections, json, math, pathlib, random, re, shutil, statistics, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).parent
-# Style counts on added lines.
+# Style counts on added lines of code files.
 STYLE = {"comments": re.compile(r"^\+(?!\+\+)(\s*|.*\s)#(?!!)\s", re.M),
          "emoji": re.compile(r"^\+.*[\U0001F300-\U0001FAFF\u2600-\u27BF\u2B50]", re.M),
          "broad_except": re.compile(r"^\+\s*except\s*(\(?\s*(Base)?Exception\b[^:]*)?:", re.M),
          "leftovers": re.compile(r"^\+.*(\b(def|class)\s+\w+_(old|v2|new|legacy)\b|\bTODO\b|\bFIXME\b)", re.M)}
-GROUPS = {"controls": lambda t: t.startswith("ctl-"), "style": lambda t: t.startswith("st-")}
+# Prose counts on added lines of .md files, for the wr- tasks.
+PROSE = {"adverb_claims": re.compile(r"\b(thoroughly|carefully|fully|rigorously|extensively|comprehensively|properly|robust\w*)\b", re.I),
+         "caveat_heads": re.compile(r"^(#+\s*|\*\*)?(caveats?|notes?|disclaimers?|limitations?|assumptions?)(\*\*)?:?\s*$", re.I | re.M)}
+HABITS = (*STYLE, "docstrings", "new_md", *PROSE, "paragraphs")
+GROUPS = {"controls": lambda t: t.startswith("ctl-"), "style": lambda t: t.startswith("st-"), "writing": lambda t: t.startswith("wr-")}
 # metric -> (aggregate over a task's cells, effect: "diff" of rates or "ratio" of medians, True if higher is better)
 METRICS = {"pass": (statistics.mean, "diff", True), "complete": (statistics.mean, "diff", True), "style": (statistics.mean, "diff", False),
+           "added_lines": (statistics.median, "ratio", False), "words": (statistics.median, "ratio", False),
            "cost": (statistics.median, "ratio", False), "out_tokens": (statistics.median, "ratio", False),
            "turns": (statistics.median, "ratio", False), "seconds": (statistics.median, "ratio", False)}
 
@@ -46,6 +51,29 @@ def style(diff):
     return out
 
 
+def prose(diff):
+    """Counts of each PROSE habit in added lines of .md files outside code fences, paragraphs of 40 words or more, and words."""
+    md = "".join(f for f in re.split(r"(?=^diff --git )", diff, flags=re.M) if re.match(r"diff --git \S+ \S+\.md\n", f))
+    lines, fenced = [], False
+    for line in md.splitlines():
+        if not line.startswith("+") or line.startswith("+++"):
+            continue
+        if line[1:].lstrip().startswith("```"):
+            fenced = not fenced
+        elif not fenced:
+            lines.append(line[1:])
+    text = "\n".join(lines)
+    blocks, run = [], []
+    for line in lines + [""]:
+        if line.strip() and not re.match(r"\s*([-*>|#]|\d+\.)", line):
+            run.append(line)
+        else:
+            blocks.append(" ".join(run))
+            run = []
+    out = {k: len(r.findall(text)) for k, r in PROSE.items()}
+    return out | {"paragraphs": sum(len(b.split()) >= 40 for b in blocks), "words": len(text.split())}
+
+
 def cell(path, task):
     evts = list(events((path / "transcript.jsonl").read_text()))
     res = next((e for e in reversed(evts) if e.get("type") == "result"), {})
@@ -57,8 +85,9 @@ def cell(path, task):
          "added_lines": len(re.findall(r"^\+(?!\+\+)", diff, re.M)),
          "turns": res.get("num_turns") or 0, "seconds": (res.get("duration_ms") or 0) / 1000,
          "out_tokens": (res.get("usage") or {}).get("output_tokens") or 0, "ended": res.get("subtype", "no result")}
-    st = style(diff)
-    return c | st | {"style": sum(st.values())}
+    st = prose(diff) if task.name.startswith("wr-") else style(diff)
+    habits = {k: st.get(k, 0) for k in HABITS}
+    return c | habits | {"words": st.get("words", 0), "style": sum(habits.values())}
 
 
 def sign_p(wins, losses):
@@ -105,11 +134,12 @@ def report(run):
         rows[(path.parent.name, path.name.rsplit("-", 1)[0])].append((path.name, c))
     arms = sorted({a for _, a in rows})
     tasks = sorted({t for t, _ in rows})
-    keys = (*STYLE, "docstrings", "new_md", "added_lines", "unrelated_lines")
+    keys = (*HABITS, "added_lines", "words", "unrelated_lines")
     md = [f"# Run {run.name}", "", f"`{(run / 'meta.json').read_text() if (run / 'meta.json').exists() else ''}`", "",
           "## Arm vs baseline, per task",
-          "", "Each task is one pair: its pass rate, mean completeness or mean style count (diff), or its median cost, tokens, turns or seconds (ratio, arm/baseline).",
-          "better/worse/ties count tasks; p is a two-sided sign test over them; the 95% CI resamples tasks.", ""]
+          "", "Each task is one pair: its pass rate, mean completeness or mean style count (diff), or its median added lines, words, cost, tokens, turns or seconds (ratio, arm/baseline).",
+          "better/worse/ties count tasks; p is a two-sided sign test over them; the 95% CI resamples tasks.",
+          "Style for a wr- task is the prose count: paragraphs of 40 words or more, adverb claims, caveat headings.", ""]
     for a in arms:
         if a != "baseline":
             md += [f"### {a}", "", "| group | metric | better | worse | ties | sign p | effect [95% CI] |", "|---|---|---|---|---|---|---|",
@@ -139,6 +169,9 @@ def selftest():
            '+# increment x\n+    y = x + 1  # add one\n+    url = "http://x/#a"\n+    try:\n+        g()\n+    except Exception as e:\n+        print("✅ ok")\n'
            '+def parse_old():\n+    pass  # TODO\n+#!/usr/bin/env python\n+    mid = (lo + hi) // 2\n+    is_new = True\n')
     assert style(sty) == {"comments": 3, "docstrings": 1, "emoji": 1, "broad_except": 1, "leftovers": 2, "new_md": 1}, style(sty)
+    pr = ("diff --git a/PR.md b/PR.md\nnew file mode 100644\n+++ b/PR.md\n+# Fix totals\n+\n+" + " ".join(["word"] * 45) + "\n+\n"
+          "+- thoroughly tested, note that it works\n+\n+## Caveats\n+\n+Notes:\n+\n+```\n+" + " ".join(["code"] * 50) + "\n+```\n+| a | b |\n")
+    assert prose(pr) == {"adverb_claims": 1, "caveat_heads": 2, "paragraphs": 1, "words": 63}, prose(pr)
     diff = "diff --git a/x.py b/x.py\n+++ b/x.py\n+a\ndiff --git a/y.py b/y.py\n-b\n+c\n"
     assert unrelated(diff, {"x.py"}) == 2
     assert sign_p(5, 0) == 0.0625 and sign_p(3, 3) == 1.0 and sign_p(0, 0) == 1.0

@@ -1,0 +1,1 @@
+findings.md is everything we found investigating the slow nightly rollup. Write the update for the tracking ticket into UPDATE.md.

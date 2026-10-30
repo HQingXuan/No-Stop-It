@@ -1,6 +1,6 @@
 {
   "name": "no-stop-it",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Stop lists for agent-written code and for what the agent writes to people: each habit that makes the output tiresome to read, the sign you are about to write it, and what to write instead.",
   "author": { "name": "HQingXuan", "url": "https://github.com/HQingXuan" }
 }
