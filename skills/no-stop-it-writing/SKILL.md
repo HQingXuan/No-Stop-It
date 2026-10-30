@@ -35,16 +35,19 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 10. **Your finding names a symptom ("the score is always the default").** Name the mechanism: the step that produces it and why.
 11. **You are comparing options and the draft is a deep dive.** Per option: what it is, what it costs, what it risks, how long. For time, say which steps wait on someone else and which one is the longest. Then your pick.
+12. **Your description claims a change the diff does not contain, or skips one it does.** Describe the diff: every change in it, and only those. A commit subject or a plan is not the diff.
+13. **The request can be read two ways and you picked one without saying.** Say which reading you took, in one line at the top. If the wrong reading would be expensive to redo, ask instead.
 
 ## Before you claim
 
-12. **You are about to write as fact something you inferred, or a link you built from a name.** Search, open it, then write. A link is copied from the page you opened.
-13. **The claim carries the argument ("X is never used", "Y is required", "nobody has this data"), or a sub-agent handed it to you.** Check the other names it could go by and the data you already have. Verify it yourself or mark it as relayed.
+14. **You are describing your own checking with an adverb or a grade: "thoroughly tested", "carefully reviewed", "fully verified".** Name the acts: ran X, read Y, did not run Z.
+15. **You are about to write as fact something you inferred, or a link you built from a name.** Search, open it, then write. A link is copied from the page you opened.
+16. **The claim carries the argument ("X is never used", "Y is required", "nobody has this data"), or a sub-agent handed it to you.** Check the other names it could go by and the data you already have. Verify it yourself or mark it as relayed.
 
 ## Hands off the send button
 
-14. **You are about to publish, post, push, merge or send anything a person will receive: a review, a reply, a ticket comment, a message.** Draft it, show it, stop. The user sends.
-15. **The user named where to post.** Post there and nowhere else.
+17. **You are about to publish, post, push, merge or send anything a person will receive: a review, a reply, a ticket comment, a message.** Draft it, show it, stop. The user sends.
+18. **The user named where to post.** Post there and nowhere else.
 
 ## Rationalizations
 
@@ -54,6 +57,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 | "Compact is concise" | Compact is unreadable. Concise is short and structured. |
 | "A caveat protects me" | A caveats section buries the finding. State the fact in a footnote. |
 | "I'm fairly sure" | Fairly sure, in writing, is a guess. Search, then write. |
+| "'Thoroughly tested' covers it" | It covers nothing. Which tests ran, which did not, is the evidence. |
 | "It's only a comment, I'll post it" | Posting is the user's. Drafting is yours. |
 
 ## Never stop

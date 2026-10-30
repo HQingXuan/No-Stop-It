@@ -14,7 +14,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 1. **Your comment says what the next line does.** Write no comment. Only comment a reason the code cannot show, in one line.
 2. **You are about to write Args/Returns docs for a function whose name and signature already say it.** Write one line, or nothing.
-3. **Your comment mentions the change itself** ("updated to", "now uses", "fixed", "new", "removed"). Describe the code as it is now. The change goes in the commit message.
+3. **Your comment mentions the change itself** ("updated to", "now uses", "fixed", "new", "removed"), **or cites the ticket, requirement or review round that asked for it.** Describe the code as it is now. The change and its ticket go in the commit message.
 4. **You are about to create a summary, notes or plan file nobody asked for** (`SUMMARY.md`, `IMPLEMENTATION.md`, `CHANGES.md`). Put it in your reply.
 5. **You are about to type an emoji** in code, a comment, a log line, a commit message or a heading. Use the plain word.
 
@@ -33,6 +33,16 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 11. **Your name is longer than four words, or a placeholder (`data`, `result`, `info`, `handler`, `manager`, `helper`).** Name what it holds in this codebase's words, as long as its neighbors' names.
 
+## Tests
+
+12. **Your test asserts on a mock (that it was called, or returned what you fed it), or computes its expected value with the code under test.** Write the expected value by hand and assert the result. If flipping a condition in the source would not fail the test, it is not a test.
+
+## The diff
+
+13. **You renamed or removed a flag, file, function, env var or value.** Grep for the old name in docs, comments, configs and examples. Fix every mention in the same change.
+14. **You are changing a version, count or name that another file also carries.** Change every copy.
+15. **Your diff mixes a rename or refactor with the behavior change, or passes about 400 changed lines.** Split it: the behavior change on its own, the refactor in its own change.
+
 ## Rationalizations
 
 | You think | Reality |
@@ -42,6 +52,8 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 | "A default is friendlier than a crash" | A wrong number in production is worse than a crash in a test. |
 | "A summary file helps the user" | The user asked for code. The summary goes in the reply. |
 | "I'll clean the debug prints up later" | Later is this turn. |
+| "The test proves the call happened" | It proves the mock works. Flip the condition; nothing fails. |
+| "One big diff is less overhead" | Past 400 lines the reviewer stops reading and starts stamping. |
 
 ## Never stop
 
@@ -72,16 +84,19 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 10. **Your finding names a symptom ("the score is always the default").** Name the mechanism: the step that produces it and why.
 11. **You are comparing options and the draft is a deep dive.** Per option: what it is, what it costs, what it risks, how long. For time, say which steps wait on someone else and which one is the longest. Then your pick.
+12. **Your description claims a change the diff does not contain, or skips one it does.** Describe the diff: every change in it, and only those. A commit subject or a plan is not the diff.
+13. **The request can be read two ways and you picked one without saying.** Say which reading you took, in one line at the top. If the wrong reading would be expensive to redo, ask instead.
 
 ## Before you claim
 
-12. **You are about to write as fact something you inferred, or a link you built from a name.** Search, open it, then write. A link is copied from the page you opened.
-13. **The claim carries the argument ("X is never used", "Y is required", "nobody has this data"), or a sub-agent handed it to you.** Check the other names it could go by and the data you already have. Verify it yourself or mark it as relayed.
+14. **You are describing your own checking with an adverb or a grade: "thoroughly tested", "carefully reviewed", "fully verified".** Name the acts: ran X, read Y, did not run Z.
+15. **You are about to write as fact something you inferred, or a link you built from a name.** Search, open it, then write. A link is copied from the page you opened.
+16. **The claim carries the argument ("X is never used", "Y is required", "nobody has this data"), or a sub-agent handed it to you.** Check the other names it could go by and the data you already have. Verify it yourself or mark it as relayed.
 
 ## Hands off the send button
 
-14. **You are about to publish, post, push, merge or send anything a person will receive: a review, a reply, a ticket comment, a message.** Draft it, show it, stop. The user sends.
-15. **The user named where to post.** Post there and nowhere else.
+17. **You are about to publish, post, push, merge or send anything a person will receive: a review, a reply, a ticket comment, a message.** Draft it, show it, stop. The user sends.
+18. **The user named where to post.** Post there and nowhere else.
 
 ## Rationalizations
 
@@ -91,6 +106,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 | "Compact is concise" | Compact is unreadable. Concise is short and structured. |
 | "A caveat protects me" | A caveats section buries the finding. State the fact in a footnote. |
 | "I'm fairly sure" | Fairly sure, in writing, is a guess. Search, then write. |
+| "'Thoroughly tested' covers it" | It covers nothing. Which tests ran, which did not, is the evidence. |
 | "It's only a comment, I'll post it" | Posting is the user's. Drafting is yours. |
 
 ## Never stop

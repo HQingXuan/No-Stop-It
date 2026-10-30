@@ -1,6 +1,6 @@
 {
   "name": "no-stop-it",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Rules for the code and the writing an agent produces: no narrating comments, boilerplate docstrings, emoji, blanket try/except, silent fallbacks, paragraph PR descriptions, caveat sections or unverified claims.",
   "contextFileName": "AGENTS.md"
 }
