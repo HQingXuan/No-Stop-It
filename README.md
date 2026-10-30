@@ -1,6 +1,14 @@
-# No-Stop-It
+<h1 align="center">No-Stop-It</h1>
 
-*"No. Stop it."*
+<p align="center"><em>"No. Stop it." Rules that keep your coding agent from writing code that reads like AI code.</em></p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/stars/HQingXuan/No-Stop-It?style=flat-square&color=111111&label=stars" alt="Stars">
+  <img src="https://img.shields.io/badge/works%20with-Claude%20Code%20%C2%B7%20Cursor%20%C2%B7%20Codex%20%C2%B7%20Copilot%20%C2%B7%20Gemini-111111?style=flat-square" alt="Works with Claude Code, Cursor, Codex, Copilot, Gemini">
+  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
+</p>
+
+<p align="center"><img src="assets/before-after.png" alt="The same task done by Opus without and with No-Stop-It: 23 lines with a docstring that repeats the code, versus 13 lines that pass the same tests" width="900"></p>
 
 [Ponytail](https://github.com/DietrichGebert/ponytail) tells your agent what to build: the smallest change that works. No-Stop-It tells it how **not** to write it: the habits that make AI code easy to spot and tiresome to review. Comments that read the code aloud. Args/Returns blocks on a two-line function. Emoji in log lines. A `try` that only logs. A fallback that returns `0` and hides the bug. `parse_old` left next to `parse`. A `SUMMARY.md` nobody asked for.
 
@@ -12,14 +20,38 @@ Each rule is written as **a sign you can observe → what to write instead**, so
 
 ## Install
 
-Claude Code:
+**Claude Code** (send these as two separate prompts):
 
 ```
 /plugin marketplace add HQingXuan/No-Stop-It
 /plugin install no-stop-it@no-stop-it
 ```
 
-Any other agent (Codex, Cursor, Gemini, ...): paste the body of [`skills/no-stop-it/SKILL.md`](skills/no-stop-it/SKILL.md) into your `AGENTS.md`, `CLAUDE.md` or rules file.
+**Cursor:** add the rule to your project.
+
+```
+mkdir -p .cursor/rules && curl -fsSL https://raw.githubusercontent.com/HQingXuan/No-Stop-It/main/.cursor/rules/no-stop-it.mdc -o .cursor/rules/no-stop-it.mdc
+```
+
+**Codex, and any agent that reads `AGENTS.md`:** append the rules to yours.
+
+```
+curl -fsSL https://raw.githubusercontent.com/HQingXuan/No-Stop-It/main/AGENTS.md >> AGENTS.md
+```
+
+**GitHub Copilot:**
+
+```
+mkdir -p .github && curl -fsSL https://raw.githubusercontent.com/HQingXuan/No-Stop-It/main/.github/copilot-instructions.md >> .github/copilot-instructions.md
+```
+
+**Gemini CLI:**
+
+```
+gemini extensions install https://github.com/HQingXuan/No-Stop-It
+```
+
+All of these are copies of [`skills/no-stop-it/SKILL.md`](skills/no-stop-it/SKILL.md), kept in sync by `python scripts/sync_rules.py`.
 
 ## Benchmark
 
