@@ -45,6 +45,20 @@ The codebase's own style always comes first. A closing "never stop" list keeps t
 
 Read the full list: [`skills/no-stop-it/SKILL.md`](skills/no-stop-it/SKILL.md).
 
+### Writing to people
+
+A second skill, `no-stop-it-writing`, does the same for what the agent writes to a person: commit messages, PR descriptions, review replies, ticket comments, design docs, slides and chat replies. 15 rules in five groups, each taken from a correction a user made to agent output:
+
+| Group | Stops |
+|-------|-------|
+| **Length and shape** | paragraph commit messages and PR descriptions, dense blocks that are hard to follow, tables with columns only the code can explain, "Caveats" sections, reasoning when a yes/no or a list was asked for |
+| **Audience** | function names and line numbers in text for non-engineers, design docs that reach API signatures, replies to reviewers that argue, "generic" drafts that still carry the current example |
+| **Substance** | findings that name the symptom instead of the mechanism, option comparisons that are deep dives instead of cost, risk and time per option |
+| **Before you claim** | inferred facts written as facts, links built from a name, load-bearing or relayed claims that were never checked |
+| **Hands off the send button** | publishing, posting or sending anything on the user's behalf; posting somewhere other than where the user said |
+
+Read the full list: [`skills/no-stop-it-writing/SKILL.md`](skills/no-stop-it-writing/SKILL.md). The benchmark below covers the code skill only.
+
 <br>
 
 ## Install
@@ -95,7 +109,7 @@ gemini extensions install https://github.com/HQingXuan/No-Stop-It
 
 No-Stop-It is plain text, so it works with any model. Run the model in one of the agents above, or put [`AGENTS.md`](AGENTS.md) in its system prompt.
 
-All of these are copies of the same skill, kept in sync by `python scripts/sync_rules.py`.
+All of these are copies of the same two skills, kept in sync by `python scripts/sync_rules.py`.
 
 <br>
 

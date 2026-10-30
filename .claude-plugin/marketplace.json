@@ -1,12 +1,12 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "no-stop-it",
-  "description": "No. Stop it. Style rules that keep agent-written code from reading like AI code.",
+  "description": "No. Stop it. Rules that keep agent-written code and writing from reading like AI output.",
   "owner": { "name": "HQingXuan", "url": "https://github.com/HQingXuan" },
   "plugins": [
     {
       "name": "no-stop-it",
-      "description": "Style stop list for agent-written code: no narrating comments, boilerplate docstrings, emoji, blanket try/except or silent fallbacks.",
+      "description": "Stop lists for agent-written code (narrating comments, boilerplate docstrings, emoji, blanket try/except, silent fallbacks) and for what the agent writes to people (paragraph PR descriptions, caveat sections, unverified claims, publishing on the user's behalf).",
       "source": "./",
       "category": "productivity"
     }
