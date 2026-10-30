@@ -8,9 +8,10 @@ import pathlib, sys
 ROOT = pathlib.Path(__file__).parents[1]
 BODY = (ROOT / "skills/no-stop-it/SKILL.md").read_text().split("---", 2)[2].strip() + "\n"
 COPIES = {
-    "AGENTS.md": BODY,  # Codex, Gemini CLI (via gemini-extension.json), and most other agents
+    "AGENTS.md": BODY,  # Codex, Gemini CLI (via gemini-extension.json), Windsurf, Cline, opencode, Devin and most other agents
     ".cursor/rules/no-stop-it.mdc": "---\ndescription: No-Stop-It style rules for code the agent writes.\nglobs:\nalwaysApply: true\n---\n\n" + BODY,
     ".github/copilot-instructions.md": BODY,
+    ".kiro/steering/no-stop-it.md": "---\ninclusion: always\n---\n\n" + BODY,
 }
 
 stale = [p for p, text in COPIES.items() if not (ROOT / p).exists() or (ROOT / p).read_text() != text]

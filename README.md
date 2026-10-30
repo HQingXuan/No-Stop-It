@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/stars/HQingXuan/No-Stop-It?style=flat-square&color=111111&label=stars" alt="Stars">
-  <img src="https://img.shields.io/badge/works%20with-Claude%20Code%20%C2%B7%20Cursor%20%C2%B7%20Codex%20%C2%B7%20Copilot%20%C2%B7%20Gemini-111111?style=flat-square" alt="Works with Claude Code, Cursor, Codex, Copilot, Gemini">
+  <img src="https://img.shields.io/badge/works%20with-Claude%20Code%20%C2%B7%20Cursor%20%C2%B7%20Codex%20%C2%B7%20Copilot%20%C2%B7%20Gemini%20%C2%B7%20Kiro-111111?style=flat-square" alt="Works with Claude Code, Cursor, Codex, Copilot, Gemini, Kiro">
   <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
 </p>
 
@@ -67,7 +67,13 @@ Send these as two separate prompts:
 mkdir -p .cursor/rules && curl -fsSL https://raw.githubusercontent.com/HQingXuan/No-Stop-It/main/.cursor/rules/no-stop-it.mdc -o .cursor/rules/no-stop-it.mdc
 ```
 
-### Codex, and any agent that reads `AGENTS.md`
+### Kiro
+
+```
+mkdir -p .kiro/steering && curl -fsSL https://raw.githubusercontent.com/HQingXuan/No-Stop-It/main/.kiro/steering/no-stop-it.md -o .kiro/steering/no-stop-it.md
+```
+
+### Codex, Windsurf, Cline, opencode, Devin, and any agent that reads `AGENTS.md`
 
 ```
 curl -fsSL https://raw.githubusercontent.com/HQingXuan/No-Stop-It/main/AGENTS.md >> AGENTS.md
@@ -84,6 +90,10 @@ mkdir -p .github && curl -fsSL https://raw.githubusercontent.com/HQingXuan/No-St
 ```
 gemini extensions install https://github.com/HQingXuan/No-Stop-It
 ```
+
+### DeepSeek, Qwen, Kimi, or any other model
+
+No-Stop-It is plain text, so it works with any model. Run the model in one of the agents above, or put [`AGENTS.md`](AGENTS.md) in its system prompt.
 
 All of these are copies of the same skill, kept in sync by `python scripts/sync_rules.py`.
 
