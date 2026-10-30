@@ -1,0 +1,1 @@
+Write dedupe.py: a command-line tool that reads one or more text files and prints each line the first time it appears across all of them, in order. Add an --ignore-case option. Add tests in test_dedupe.py.

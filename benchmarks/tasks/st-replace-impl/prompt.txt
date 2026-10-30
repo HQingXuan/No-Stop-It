@@ -1,0 +1,1 @@
+primes_upto in primes.py is too slow for n in the millions. Replace it with a sieve of Eratosthenes, keeping the same API.

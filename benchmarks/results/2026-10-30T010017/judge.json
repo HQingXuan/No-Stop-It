@@ -1,0 +1,402 @@
+{
+ "ctl-csv/baseline-0": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the column shift on quoted fields containing commas, the likely cause of wrong totals. The reply's explanation matches the change and it flags the remaining decimal limitation.",
+  "missing": "none"
+ },
+ "ctl-csv/baseline-1": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the quoted-comma column shift that caused wrong totals. The reply discloses the behavior change for malformed amounts.",
+  "missing": "none"
+ },
+ "ctl-csv/baseline-2": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes quoted-comma column shifts. It also parses amounts as Decimal, so decimals, negatives and thousands separators are counted instead of dropped, matching the reply's claims.",
+  "missing": "none"
+ },
+ "ctl-csv/baseline-3": {
+  "score": 3,
+  "why": "The diff replaces the naive comma split with csv.DictReader, which fixes quoted commas. It also parses amounts as Decimal instead of isdigit(), so decimal and negative values are counted, and it strips region whitespace. That covers the wrong-total causes the task points to.",
+  "missing": "none"
+ },
+ "ctl-csv/baseline-4": {
+  "score": 3,
+  "why": "The diff replaces the naive comma split with csv.DictReader, so quoted fields no longer shift columns. It also uses Decimal so decimal and negative amounts are counted, which fixes the wrong totals described in the task.",
+  "missing": "none"
+ },
+ "ctl-csv/style-0": {
+  "score": 3,
+  "why": "The diff replaces the hand-rolled comma split with csv.DictReader, which fixes the misaligned columns from quoted fields. It also stops silently counting non-numeric amounts as 0, so the dropped rows are now included in the totals.",
+  "missing": "none"
+ },
+ "ctl-csv/style-1": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the quoted-comma misparse behind the wrong totals. It also stops treating non-digit amounts such as negatives as 0, and the reply discloses that blank or decimal amounts now raise an error.",
+  "missing": "none"
+ },
+ "ctl-csv/style-2": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the quoted-comma column shift that produced wrong totals. The reply discloses the behavior change for non-integer amounts.",
+  "missing": "none"
+ },
+ "ctl-csv/style-3": {
+  "score": 3,
+  "why": "The diff replaces naive line splitting with csv.DictReader, which fixes quoted-comma rows, and parses amounts as Decimal so decimals and negatives are no longer counted as 0. This covers both causes of wrong totals.",
+  "missing": "none"
+ },
+ "ctl-csv/style-4": {
+  "score": 3,
+  "why": "The diff replaces naive comma splitting with csv.DictReader, which fixes the quoted-comma column shift behind the wrong totals. Bad amounts now raise instead of silently counting as 0, and the reply discloses the remaining limit on decimal amounts.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-0": {
+  "score": 3,
+  "why": "todo.py adds --done and --json to the list subcommand and they combine correctly. test_todo.py adds tests for --done, --json, and both together.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-1": {
+  "score": 3,
+  "why": "`--done` and `--json` are both added to the list subparser, filtering and JSON output work alone and combined, and three tests cover them.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-2": {
+  "score": 3,
+  "why": "`--done` filters to finished items, `--json` prints the items as a JSON list, and they combine. Three tests cover `--done`, `--json` and both together.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-3": {
+  "score": 3,
+  "why": "todo.py adds `--done` (filters to finished items) and `--json` (prints a JSON list), and they combine correctly. Tests cover each option and the combination.",
+  "missing": "none"
+ },
+ "ctl-flag/baseline-4": {
+  "score": 3,
+  "why": "todo.py adds --done filtering and --json output, which work alone or combined, and three new tests cover --done, --json, and both together.",
+  "missing": "none"
+ },
+ "ctl-flag/style-0": {
+  "score": 3,
+  "why": "`--done` and `--json` are added to the `list` subparser and work together, and the diff adds tests for `--done`, `--json` and both combined.",
+  "missing": "none"
+ },
+ "ctl-flag/style-1": {
+  "score": 3,
+  "why": "`--done` and `--json` are added to the list subparser and work alone or together, with a test for each case. `json` is almost certainly already imported, since `load()` reads the todo data, though the diff doesn't show the import line.",
+  "missing": "none"
+ },
+ "ctl-flag/style-2": {
+  "score": 3,
+  "why": "The diff adds `--done` and `--json` to `list`, they combine correctly, and three tests cover done, json and both together.",
+  "missing": "none"
+ },
+ "ctl-flag/style-3": {
+  "score": 3,
+  "why": "`--done` filters to finished items, `--json` prints a JSON list, and the two combine. Three tests cover done, json and both together.",
+  "missing": "none"
+ },
+ "ctl-flag/style-4": {
+  "score": 3,
+  "why": "`--done` filters to finished items, `--json` prints a JSON list, and the two combine. Tests cover each option and the combination.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-0": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section matches the new signature and behaviors.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-1": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is paginated, per_page is capped at 100, page or per_page below 1 raises ValueError, and the README API section documents all of it.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-2": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section documents all of it.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-3": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section documents the new signature and behavior.",
+  "missing": "none"
+ },
+ "ctl-paginate/baseline-4": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section is updated to match.",
+  "missing": "none"
+ },
+ "ctl-paginate/style-0": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with per_page capped at 100 and ValueError for page or per_page below 1, and the README API section documents the new signature and rules.",
+  "missing": "none"
+ },
+ "ctl-paginate/style-1": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section describes the new signature and rules.",
+  "missing": "none"
+ },
+ "ctl-paginate/style-2": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is paginated, per_page is capped at 100, page or per_page below 1 raises ValueError, and the README API section documents all of it.",
+  "missing": "none"
+ },
+ "ctl-paginate/style-3": {
+  "score": 3,
+  "why": "list_items has the (page=1, per_page=20) signature, caps per_page at 100, raises ValueError for page or per_page below 1, and the README API section documents all of it.",
+  "missing": "none"
+ },
+ "ctl-paginate/style-4": {
+  "score": 3,
+  "why": "list_items(page=1, per_page=20) is implemented with the 100 cap and ValueError for page or per_page below 1, and the README API section is updated to match.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-0": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and every caller in admin.py, views.py and test_app.py, including the imports. Nothing in the diff leaves a stale `get_usr` behind.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-1": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and updates every caller (views, admin) and the test import and usage, so no get_usr remains in the shown changes.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-2": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and updates every shown caller (admin.py, views.py) plus the test import and call in test_app.py. The change is a pure rename, so the tests should still pass.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-3": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py, the callers in app/admin.py and app/views.py, and the import and call in test_app.py. Nothing in the diff suggests a remaining `get_usr`.",
+  "missing": "none"
+ },
+ "ctl-rename/baseline-4": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and every caller (admin.py, views.py, test_app.py), with no `get_usr` left in the changed files.",
+  "missing": "none"
+ },
+ "ctl-rename/style-0": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py, the callers in app/admin.py and app/views.py, and the import and call in test_app.py. No remaining `get_usr` references show up in the diff.",
+  "missing": "none"
+ },
+ "ctl-rename/style-1": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and every caller (views.py, admin.py, and the test import and call in test_app.py), so no old name appears in the changed code.",
+  "missing": "none"
+ },
+ "ctl-rename/style-2": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py, the callers in app/views.py and app/admin.py, and the import and call in test_app.py. The tests were updated to match, so they should still pass.",
+  "missing": "none"
+ },
+ "ctl-rename/style-3": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and updates every caller (views, admin) and the test import and call, so no `get_usr` remains in the changed files.",
+  "missing": "none"
+ },
+ "ctl-rename/style-4": {
+  "score": 3,
+  "why": "The diff renames the definition in app/users.py and updates every caller (views.py, admin.py) and the test import and usage in test_app.py, so no old references remain in the shown changes.",
+  "missing": "none"
+ },
+ "st-config-loader/baseline-0": {
+  "score": 3,
+  "why": "load_config reads JSON, merges defaults for missing keys, and raises ValueError for non-int or out-of-range ports (including bools); test_config.py covers defaults, overrides, port bounds, and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/baseline-1": {
+  "score": 3,
+  "why": "load_config reads JSON, merges defaults for missing keys, and raises ValueError for non-integer or out-of-range ports (bools rejected too). test_config.py covers defaults, overrides, bounds and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/baseline-2": {
+  "score": 3,
+  "why": "load_config reads JSON, merges the defaults, and raises ValueError for any port that isn't an int in 1..65535 (bools excluded). test_config.py covers defaults, overrides, and valid and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/baseline-3": {
+  "score": 3,
+  "why": "load_config reads JSON, merges defaults for missing keys, and raises ValueError for non-int or out-of-range ports (including bools). test_config.py covers defaults, overrides, bounds, and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/baseline-4": {
+  "score": 3,
+  "why": "load_config merges the defaults, raises ValueError for any port that isn't an int from 1 to 65535, and test_config.py covers defaults, overrides, boundaries and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/style-0": {
+  "score": 3,
+  "why": "load_config reads JSON, merges defaults for missing keys, and raises ValueError for non-integer or out-of-range ports (including bools). test_config.py covers defaults, overrides, bounds, and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/style-1": {
+  "score": 3,
+  "why": "load_config reads JSON, merges defaults for missing keys, and raises ValueError for non-integer or out-of-range ports (bools rejected too); test_config.py covers defaults, overrides, bounds, and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/style-2": {
+  "score": 3,
+  "why": "load_config reads JSON, merges defaults, and raises ValueError for non-integer or out-of-range ports (bools rejected); test_config.py covers defaults, overrides, bounds, and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/style-3": {
+  "score": 3,
+  "why": "load_config reads the JSON, merges the defaults, and raises ValueError for any port that is not an int in 1-65535, rejecting bools too. test_config.py covers defaults, overrides, bounds and invalid ports.",
+  "missing": "none"
+ },
+ "st-config-loader/style-4": {
+  "score": 3,
+  "why": "load_config reads the JSON, merges the defaults, and raises ValueError for any port that is not an integer from 1 to 65535. test_config.py covers defaults, overrides, bounds and invalid ports.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/baseline-0": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files and prints each line on first appearance in order, has --ignore-case (and -i), and test_dedupe.py covers the function, CLI, multi-file, ignore-case, and error cases.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/baseline-1": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files, prints each line on first occurrence in order, and supports --ignore-case; test_dedupe.py covers the main behaviors.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/baseline-2": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files, prints each line first-seen across all in order, supports --ignore-case, and test_dedupe.py covers these behaviors.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/baseline-3": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files, prints each line on first appearance in order, and supports --ignore-case. test_dedupe.py covers single and multiple files, default case sensitivity, ignore-case, CRLF and missing-newline input, and a missing file.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/baseline-4": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files and prints each line on first appearance in order, supports --ignore-case, and test_dedupe.py covers the behaviors including multi-file order and case handling.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/style-0": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files, prints each line on first appearance in order, supports --ignore-case (and -i), and test_dedupe.py covers these cases plus edge cases.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/style-1": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files, prints each line on first appearance in order, supports --ignore-case (and -i), and test_dedupe.py covers single/multi-file, case option, and edge cases.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/style-2": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files, prints each line on first appearance in order, supports --ignore-case (-i), and test_dedupe.py covers within/across-file dedupe, ignore-case, CLI output, and missing file.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/style-3": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files, prints first occurrences in order across all of them, and supports --ignore-case (also -i); test_dedupe.py covers ordering, case handling, multi-file, CLI flag, and edge cases.",
+  "missing": "none"
+ },
+ "st-dedupe-cli/style-4": {
+  "score": 3,
+  "why": "dedupe.py reads multiple files, prints each line on first appearance in order, supports --ignore-case, and test_dedupe.py covers these behaviors.",
+  "missing": "none"
+ },
+ "st-get-user/baseline-0": {
+  "score": 3,
+  "why": "get_user queries the users table in app.db via connect(), returns dict(row), raises KeyError when no row is found, and closes the connection.",
+  "missing": "none"
+ },
+ "st-get-user/baseline-1": {
+  "score": 3,
+  "why": "get_user queries the users table via the existing connect() helper (DB presumably app.db), returns dict(row), and raises KeyError when no row is found.",
+  "missing": "none"
+ },
+ "st-get-user/baseline-2": {
+  "score": 3,
+  "why": "get_user queries the users table via the existing connect() helper (default DB, presumably app.db), returns dict(row), and raises KeyError when no row is found; connection is closed.",
+  "missing": "none"
+ },
+ "st-get-user/baseline-3": {
+  "score": 3,
+  "why": "get_user queries the users table via the existing connect() helper (DB default is app.db), returns dict(row), raises KeyError when no row is found, and closes the connection.",
+  "missing": "none"
+ },
+ "st-get-user/baseline-4": {
+  "score": 3,
+  "why": "get_user queries the users table in app.db via the existing connect(), returns dict(row), and raises KeyError when no row is found; the connection is closed properly.",
+  "missing": "none"
+ },
+ "st-get-user/style-0": {
+  "score": 3,
+  "why": "get_user queries the users table in app.db via the existing connect(), returns dict(row), and raises KeyError when no row is found; the connection is closed properly.",
+  "missing": "none"
+ },
+ "st-get-user/style-1": {
+  "score": 3,
+  "why": "get_user(user_id) is in users.py, queries the users table in app.db via sqlite3, returns dict(row), and raises KeyError when no row is found.",
+  "missing": "none"
+ },
+ "st-get-user/style-2": {
+  "score": 3,
+  "why": "get_user is added to users.py, queries the users table in app.db via connect(), returns dict(row), and raises KeyError when no row is found.",
+  "missing": "none"
+ },
+ "st-get-user/style-3": {
+  "score": 3,
+  "why": "get_user queries the users table in app.db via connect(), returns dict(row), and raises KeyError when no row is found; the code matches the task.",
+  "missing": "none"
+ },
+ "st-get-user/style-4": {
+  "score": 3,
+  "why": "get_user queries the users table in app.db via connect(), returns dict(row), and raises KeyError when no row is found; the connection is closed properly.",
+  "missing": "none"
+ },
+ "st-replace-impl/baseline-0": {
+  "score": 3,
+  "why": "primes_upto now uses a correct bytearray sieve of Eratosthenes with the same signature, returning a list of primes up to and including n, and [] for n < 2.",
+  "missing": "none"
+ },
+ "st-replace-impl/baseline-1": {
+  "score": 3,
+  "why": "primes_upto now uses a correct bytearray sieve of Eratosthenes with the same signature and return type (sorted list of ints), handling n<2 and slice-assigning multiples from i*i.",
+  "missing": "none"
+ },
+ "st-replace-impl/baseline-2": {
+  "score": 3,
+  "why": "primes_upto now uses a correct bytearray sieve of Eratosthenes with the same signature and return type (sorted list), handling n<2 and slice assignment properly; count_primes untouched.",
+  "missing": "none"
+ },
+ "st-replace-impl/baseline-3": {
+  "score": 3,
+  "why": "primes_upto now uses a correct bytearray sieve of Eratosthenes with the same signature and return type (sorted list of primes <= n), and handles n < 2.",
+  "missing": "none"
+ },
+ "st-replace-impl/baseline-4": {
+  "score": 3,
+  "why": "primes_upto is now a correct bytearray sieve of Eratosthenes with the same signature and return type, handling n<2 and slice-assigning multiples from i*i.",
+  "missing": "none"
+ },
+ "st-replace-impl/style-0": {
+  "score": 3,
+  "why": "primes_upto now uses a correct sieve of Eratosthenes (bytearray, slice marking from p*p, handles n<2) with the same signature and sorted list output.",
+  "missing": "none"
+ },
+ "st-replace-impl/style-1": {
+  "score": 3,
+  "why": "primes_upto is now a correct bytearray sieve of Eratosthenes with the same signature and return type (sorted list), handling n<2 and slice-assigning composites from p*p.",
+  "missing": "none"
+ },
+ "st-replace-impl/style-2": {
+  "score": 3,
+  "why": "primes_upto now uses a bytearray sieve of Eratosthenes with slice-based marking, handles n<2 by returning [], and keeps the same signature and list return.",
+  "missing": "none"
+ },
+ "st-replace-impl/style-3": {
+  "score": 3,
+  "why": "primes_upto is now a correct bytearray sieve of Eratosthenes with the same signature and return type, handling n<2 and slice-assigning multiples from p*p.",
+  "missing": "none"
+ },
+ "st-replace-impl/style-4": {
+  "score": 3,
+  "why": "primes_upto now uses a correct bytearray sieve of Eratosthenes with the same signature and return type, and it handles n < 2 correctly.",
+  "missing": "none"
+ }
+}

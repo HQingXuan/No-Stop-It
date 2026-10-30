@@ -11,6 +11,7 @@ Each rule is written as **a sign you can observe → stop → do this instead**,
 | Skill | What it does |
 |-------|--------------|
 | `no-stop-it` | The stop list: 14 rules in four groups (scope, loops, fake progress, asking and waiting), a rationalization table, and a "never stop" list. |
+| `no-stop-it-style` | Style stop list: narrating comments, boilerplate docstrings, emoji, blanket try/except, silent fallbacks, leftover debug output and `_old` copies, summary files nobody asked for. |
 | `no-stop-it-check` | Checks a diff for what the stop list forbids: silenced checks, skipped or weakened tests, stubs, new dependencies, unrelated edits. Lists findings, changes no code. |
 
 ## Install
@@ -34,6 +35,8 @@ python benchmarks/judge.py --selftest      # check the judge, a few cents
 python benchmarks/run.py --runs 2 --arms baseline --tasks r05-utc   # calibrate a new trap
 python benchmarks/run.py --runs 5          # every task, both arms
 ```
+
+Style tasks (`st-*`) are plain coding tasks that invite AI style habits; each cell counts narrating comments, docstrings, emoji, broad `except`, leftovers and new `.md` files in its diff (`python benchmarks/run.py --arms baseline style --tasks ...`, add `--bare` to swap Claude Code's system prompt for a one-liner).
 
 Four control tasks (`ctl-*`) have no trap: plain feature, fix and rename work. They show what the rules cost on normal tasks and whether they make the agent stop early. A blind judge (`benchmarks/judge.py`) scores how much of each control task was delivered, 0-3, and refuses to run unless it ranks every reference solution above a stub.
 

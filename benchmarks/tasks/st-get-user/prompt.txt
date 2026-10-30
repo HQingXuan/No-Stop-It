@@ -1,0 +1,1 @@
+Add get_user(user_id) to users.py. It reads the users table in app.db (sqlite3) and returns the user as a dict, or raises KeyError if there is no such user.

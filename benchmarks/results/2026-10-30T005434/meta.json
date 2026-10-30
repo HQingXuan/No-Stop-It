@@ -1,0 +1,1 @@
+{"model": "sonnet", "runs": 5, "budget": 1.5, "arms": ["baseline", "style"]}

@@ -1,0 +1,1 @@
+Write load_config(path) in config.py: it reads a JSON file and fills in the defaults {"port": 8080, "debug": false} for missing keys. It raises ValueError if port is not an integer from 1 to 65535. Add tests in test_config.py.
