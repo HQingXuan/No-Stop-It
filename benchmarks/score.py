@@ -7,11 +7,10 @@ import collections, json, math, pathlib, random, re, shutil, statistics, subproc
 
 ROOT = pathlib.Path(__file__).parent
 # Style counts on added lines.
-STYLE = {"comments": re.compile(r"^\+(?!\+\+)(\s*|.*\s)(#(?!!)|//)\s", re.M),
-         "docstrings": re.compile(r'^\+.*?("""|\'\'\')', re.M),
+STYLE = {"comments": re.compile(r"^\+(?!\+\+)(\s*|.*\s)#(?!!)\s", re.M),
          "emoji": re.compile(r"^\+.*[\U0001F300-\U0001FAFF\u2600-\u27BF\u2B50]", re.M),
          "broad_except": re.compile(r"^\+\s*except\s*(\(?\s*(Base)?Exception\b[^:]*)?:", re.M),
-         "leftovers": re.compile(r"^\+.*(\b\w+_(old|v2|new|legacy)\b|\bTODO\b|\bFIXME\b)", re.M)}
+         "leftovers": re.compile(r"^\+.*(\b(def|class)\s+\w+_(old|v2|new|legacy)\b|\bTODO\b|\bFIXME\b)", re.M)}
 GROUPS = {"controls": lambda t: t.startswith("ctl-"), "style": lambda t: t.startswith("st-")}
 # metric -> (aggregate over a task's cells, effect: "diff" of rates or "ratio" of medians, True if higher is better)
 METRICS = {"pass": (statistics.mean, "diff", True), "complete": (statistics.mean, "diff", True), "style": (statistics.mean, "diff", False),
@@ -50,13 +49,12 @@ def style(diff):
 def cell(path, task):
     evts = list(events((path / "transcript.jsonl").read_text()))
     res = next((e for e in reversed(evts) if e.get("type") == "result"), {})
-    final = res.get("result") or ""
     diff = (path / "diff.patch").read_text()
     allowed = set((task / "allowed.txt").read_text().split())
-    why = subprocess.run([sys.executable, "-I", "-B", str(task / "check.py"), str(path / "repo"), final, str(path / "transcript.jsonl")],
-                         capture_output=True, text=True, timeout=60)
+    why = subprocess.run([sys.executable, "-I", "-B", str(task / "check.py"), str(path / "repo")], capture_output=True, text=True, timeout=60)
     reasons = why.stdout.strip() or (f"check crashed: {why.stderr.strip().splitlines()[-1:]}" if why.returncode else "")
     c = {"pass": not reasons, "why": reasons, "unrelated_lines": unrelated(diff, allowed), "cost": res.get("total_cost_usd") or 0,
+         "added_lines": len(re.findall(r"^\+(?!\+\+)", diff, re.M)),
          "turns": res.get("num_turns") or 0, "seconds": (res.get("duration_ms") or 0) / 1000,
          "out_tokens": (res.get("usage") or {}).get("output_tokens") or 0, "ended": res.get("subtype", "no result")}
     st = style(diff)
@@ -107,7 +105,7 @@ def report(run):
         rows[(path.parent.name, path.name.rsplit("-", 1)[0])].append((path.name, c))
     arms = sorted({a for _, a in rows})
     tasks = sorted({t for t, _ in rows})
-    keys = (*STYLE, "new_md", "unrelated_lines")
+    keys = (*STYLE, "docstrings", "new_md", "added_lines", "unrelated_lines")
     md = [f"# Run {run.name}", "", f"`{(run / 'meta.json').read_text() if (run / 'meta.json').exists() else ''}`", "",
           "## Arm vs baseline, per task",
           "", "Each task is one pair: its pass rate, mean completeness or mean style count (diff), or its median cost, tokens, turns or seconds (ratio, arm/baseline).",
@@ -125,7 +123,7 @@ def report(run):
         cs = [c for t in tasks for _, c in rows[t, a]]
         md.append(f"| {a} | " + " | ".join(str(sum(c[k] for c in cs)) for k in keys)
                   + " | " + " | ".join(f"{sum(c[k] for c in cs) / len(cs):.2f}" for k in ("cost", "turns", "seconds")) + " |")
-    md += ["", "## Every cell", "", "| task | cell | pass | why | complete | " + " | ".join(keys) + " | cost $ | ended |", "|---|" + "---|" * (len(keys) + 7)]
+    md += ["", "## Every cell", "", "| task | cell | pass | why | complete | " + " | ".join(keys) + " | cost $ | ended |", "|---|" + "---|" * (len(keys) + 6)]
     for t in tasks:
         for a in arms:
             for name, c in rows[t, a]:
@@ -139,7 +137,7 @@ def report(run):
 def selftest():
     sty = ('diff --git a/NOTES.md b/NOTES.md\nnew file mode 100644\n+# Notes\ndiff --git a/a.py b/a.py\n+def f(x):\n+    """Return x."""\n'
            '+# increment x\n+    y = x + 1  # add one\n+    url = "http://x/#a"\n+    try:\n+        g()\n+    except Exception as e:\n+        print("✅ ok")\n'
-           '+def parse_old():\n+    pass  # TODO\n+#!/usr/bin/env python\n')
+           '+def parse_old():\n+    pass  # TODO\n+#!/usr/bin/env python\n+    mid = (lo + hi) // 2\n+    is_new = True\n')
     assert style(sty) == {"comments": 3, "docstrings": 1, "emoji": 1, "broad_except": 1, "leftovers": 2, "new_md": 1}, style(sty)
     diff = "diff --git a/x.py b/x.py\n+++ b/x.py\n+a\ndiff --git a/y.py b/y.py\n-b\n+c\n"
     assert unrelated(diff, {"x.py"}) == 2
