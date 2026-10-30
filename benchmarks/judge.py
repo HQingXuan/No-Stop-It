@@ -1,4 +1,4 @@
-"""Blind completeness judge for the control tasks (ctl-*), so a stop list that makes the agent quit early shows up.
+"""Blind completeness judge for the control and style tasks (ctl-*, st-*), so rules that make the agent deliver less show up.
 
 check.py says pass or fail; the judge says how much of the ask was delivered, 0-3, from the task, the diff
 and the final reply. Before scoring a run it must rank each task's reference solution above a stub that
@@ -14,6 +14,7 @@ import run, score
 
 ROOT = pathlib.Path(__file__).parent
 MODEL = "sonnet"
+JUDGED = ("ctl-*", "st-*")
 RUBRIC = """You check whether a coding agent delivered what it was asked. You get the task, the agent's diff and its final reply.
 Judge completeness only, not style. Trust the diff over the reply: a claim with no matching change counts for nothing.
 Score 0-3:
@@ -44,14 +45,14 @@ def diff_dirs(a, b):
     """Unified diff of every file that differs between two trees."""
     out = []
     for p in sorted({q.relative_to(a) for q in a.rglob("*") if q.is_file()} | {q.relative_to(b) for q in b.rglob("*") if q.is_file()}):
-        x, y = ((d / p).read_text().splitlines(keepends=True) if (d / p).exists() else [] for d in (a, b))
+        x, y = ((d / p).read_text(errors="replace").splitlines(keepends=True) if (d / p).exists() else [] for d in (a, b))
         out += difflib.unified_diff(x, y, f"a/{p}", f"b/{p}")
     return "".join(out)
 
 
 def selftest():
     ok = True
-    for task in sorted((ROOT / "tasks").glob("ctl-*")):
+    for task in sorted(t for p in JUDGED for t in (ROOT / "tasks").glob(p)):
         with tempfile.TemporaryDirectory() as tmp:
             shutil.copytree(task / "repo", tmp, dirs_exist_ok=True)
             shutil.copytree(task / "solution", tmp, dirs_exist_ok=True)
@@ -66,7 +67,7 @@ def selftest():
 
 
 def judge(run):
-    cells = sorted(p for p in (run / "raw").glob("ctl-*/*") if p.is_dir())
+    cells = sorted(c for p in JUDGED for c in (run / "raw").glob(f"{p}/*") if c.is_dir())
 
     def one(path):
         evts = list(score.events((path / "transcript.jsonl").read_text()))

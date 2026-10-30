@@ -15,7 +15,7 @@ ENV_KEYS = ("PATH", "ANTHROPIC_API_KEY", "ANTHROPIC_BASE_URL", "CLAUDE_CODE_OAUT
             "HTTPS_PROXY", "https_proxy", "NO_PROXY", "no_proxy", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "REQUESTS_CA_BUNDLE")
 
 
-def cell(task, arm, i, out, model, budget):
+def cell(task, arm, i, out, model, budget, bare):
     dest = out / task.name / f"{arm}-{i}"
     dest.mkdir(parents=True)
     with tempfile.TemporaryDirectory() as tmp:
@@ -28,6 +28,8 @@ def cell(task, arm, i, out, model, budget):
         env = {k: os.environ[k] for k in ENV_KEYS if k in os.environ} | {"HOME": str(home), "IS_SANDBOX": "1", "PYTHONDONTWRITEBYTECODE": "1"}
         cmd = ["claude", "-p", (task / "prompt.txt").read_text(), "--model", model, "--output-format", "stream-json",
                "--verbose", "--permission-mode", "bypassPermissions", "--max-budget-usd", str(budget)]
+        if bare:  # Claude Code's own prompt already asks for few comments; a plainer agent does not
+            cmd += ["--system-prompt", "You are a coding agent working in this repository."]
         if ARMS[arm]:
             cmd += ["--append-system-prompt", ARMS[arm]]
         try:
@@ -48,16 +50,18 @@ def main():
     ap.add_argument("--budget", type=float, default=1.5, help="max USD per session")
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--tasks", nargs="*", help="task names, default all")
+    ap.add_argument("--arms", nargs="*", default=list(ARMS), choices=list(ARMS))
+    ap.add_argument("--bare", action="store_true", help="a one-line system prompt instead of Claude Code's")
     a = ap.parse_args()
     tasks = [t for t in sorted((ROOT / "tasks").iterdir()) if not a.tasks or t.name in a.tasks]
     out = ROOT / "results" / datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H%M%S") / "raw"
     # Interleave arms so a slow or fast stretch of the API does not land on one arm.
     jobs = [(t, arm, i) for i in range(a.runs) for n, t in enumerate(tasks)
-            for arm in (list(ARMS) if (i + n) % 2 == 0 else list(ARMS)[::-1])]
+            for arm in (a.arms if (i + n) % 2 == 0 else a.arms[::-1])]
     with ThreadPoolExecutor(a.jobs) as pool:
-        list(pool.map(lambda j: cell(*j, out, a.model, a.budget), jobs))
-    (out.parent / "meta.json").write_text(json.dumps({"model": a.model, "runs": a.runs, "budget": a.budget}))
-    if any(t.name.startswith("ctl-") for t in tasks):
+        list(pool.map(lambda j: cell(*j, out, a.model, a.budget, a.bare), jobs))
+    (out.parent / "meta.json").write_text(json.dumps({"model": a.model, "runs": a.runs, "budget": a.budget, "arms": a.arms, "bare": a.bare}))
+    if any(t.name.startswith(("ctl-", "st-")) for t in tasks):
         import judge  # judge imports this module, so not at the top
         if judge.selftest():
             judge.judge(out.parent)

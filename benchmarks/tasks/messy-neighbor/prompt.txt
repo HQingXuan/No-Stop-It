@@ -1,1 +1,0 @@
-`slugify("Hello World")` returns "Hello-World", it should be "hello-world". Fix it.
