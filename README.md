@@ -118,8 +118,8 @@ The summary reports, per task group, on how many tasks the rules beat the baseli
 ### Run it
 
 ```
-python benchmarks/score.py --selftest                    # check the scorers, free
-python benchmarks/judge.py --selftest                    # check the judge, a few cents
+python benchmarks/score.py --selftest
+python benchmarks/judge.py --selftest
 python benchmarks/run.py --runs 5                        # every task, both arms
 python benchmarks/run.py --runs 5 --model opus --bare    # another model, a one-line system prompt
 ```
