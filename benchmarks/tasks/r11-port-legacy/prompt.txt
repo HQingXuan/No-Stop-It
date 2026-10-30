@@ -1,1 +1,0 @@
-We're dropping Node. Port the rest of legacy.js into lib.py (same behavior), with tests in test_lib.py.

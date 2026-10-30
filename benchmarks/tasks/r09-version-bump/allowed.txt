@@ -1,4 +1,0 @@
-csvlite.py
-version.py
-CHANGELOG.md
-test_csvlite.py

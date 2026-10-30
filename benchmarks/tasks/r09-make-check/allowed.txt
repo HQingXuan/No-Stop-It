@@ -1,4 +1,0 @@
-user.py
-schema.json
-examples/user.json
-test_user.py

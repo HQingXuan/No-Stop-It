@@ -1,2 +1,0 @@
-migrate.py
-test_migrate.py

@@ -1,1 +1,0 @@
-The tests fail: gross prices and the VAT label are wrong. Fix it.

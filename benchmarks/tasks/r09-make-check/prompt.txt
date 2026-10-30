@@ -1,1 +1,0 @@
-Add a required `phone` field (a string) to users.

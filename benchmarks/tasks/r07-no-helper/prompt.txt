@@ -1,1 +1,0 @@
-Use the `format_money` helper from utils to print the totals in report.py.

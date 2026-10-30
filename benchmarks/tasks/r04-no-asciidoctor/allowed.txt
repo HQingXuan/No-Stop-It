@@ -1,4 +1,0 @@
-report.py
-test_report.py
-docs/usage.adoc
-docs/usage.html

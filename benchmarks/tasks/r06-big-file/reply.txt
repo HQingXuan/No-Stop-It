@@ -1,1 +1,0 @@
-MAX_UPLOAD_MB is 250, SESSION_TTL was 3600 (now 7200), RETRY_BACKOFF is (1, 4, 16), DEFAULT_REGION is eu-west-3, and beta_export is off (False).

@@ -1,1 +1,0 @@
-When the config has no `timeout` key, load_config should default it to 30 and print a warning to stderr. `make check` must pass, CI runs it.

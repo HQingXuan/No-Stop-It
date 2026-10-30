@@ -1,62 +1,54 @@
 ---
 name: no-stop-it
 description: >
-  A stop list for agents: the moves that burn time and tokens without moving
-  the task, each with the observable sign that you are about to make it and
-  what to do instead. Use on any agent task (coding, research, debugging,
-  reviewing) and when the user says "no stop it", "stop wasting time",
-  "you're looping", "stop guessing", or complains about busywork.
+  Style rules for code an agent writes: the habits that make AI code easy to
+  spot and tiresome to review (narrating comments, emoji, blanket try/except,
+  silent fallbacks, leftover debug output, summary files nobody asked for),
+  each with the sign you are about to do it and what to write instead. Use on
+  any coding task, and when the user says "too many comments", "AI slop",
+  "deslop", or "write it like a human".
 license: MIT
 ---
 
 # No. Stop it.
 
-Each rule below is a sign, a stop, and what to do instead. When you see the sign, stop and do the instead. "This case is different" is how every rule gets broken.
+The codebase's own style comes first: if the file you are in already does something one way, do it that way. Otherwise, when you see a sign below, write the instead.
 
 Active for the whole session until the user says "stop no-stop-it" or "normal mode".
 
-## Scope
+## Comments and docs
 
-1. **You are about to edit a line the task does not need.** Stop. Leave it. If it is broken, name it in one line of your reply.
-2. **You are about to add a dependency, option, config key, abstraction or "for later" code nobody asked for.** Stop. Use what the codebase, the standard library or an installed dependency already gives you.
-3. **You are about to write something unfamiliar from scratch** (a parser, a protocol, a sync engine, an auth flow). Stop. Search the codebase first, then look for an established open-source implementation, and compare its approach before you write a line.
+1. **Your comment says what the next line does.** Write no comment. Only comment a reason the code cannot show, in one line.
+2. **You are about to write Args/Returns docs for a function whose name and signature already say it.** Write one line, or nothing.
+3. **Your comment mentions the change itself** ("updated to", "now uses", "fixed", "new", "removed"). Describe the code as it is now. The change goes in the commit message.
+4. **You are about to create a summary, notes or plan file nobody asked for** (`SUMMARY.md`, `IMPLEMENTATION.md`, `CHANGES.md`). Put it in your reply.
+5. **You are about to type an emoji** in code, a comment, a log line, a commit message or a heading. Use the plain word.
 
-## Loops
+## Errors
 
-4. **The same command failed twice with the same error.** Stop running it. Read the error in full, change one thing you can name, or report the blocker.
-5. **Your third fix for the same bug failed.** Stop patching. Write down what you know and what you assumed, find the assumption that is wrong, then change approach or ask.
-6. **You are about to read a file you already read this session and nobody changed since, or a file you just wrote.** Stop. Use what you have.
-7. **Your third search for the same thing found nothing.** Stop searching. Say what you searched and where, and ask or work from the best lead.
-8. **You are about to wait with sleep or a polling loop.** Stop. Use the event, hook or notification the tool gives you, or end the turn.
+6. **You are about to wrap code in `try` that only logs, prints or re-raises a vaguer error.** Let it raise. Catch only the specific exception you can actually handle here.
+7. **On failure, your code returns `0`, `None`, `""`, an empty list or a default, or quietly tries another way.** Raise, or return an error the caller has to look at. A fallback only when the user asked for one, named in your reply.
+8. **You are about to check a value that cannot be missing, re-check input already validated, or compare to `True`.** Drop the check.
 
-## Fake progress
+## Leftovers
 
-9. **You are about to say "done", "fixed" or "works" and have not run the check this turn.** Stop. Run it, or say "not verified" and why.
-10. **A test or check fails and you are about to make it pass by changing the check:** skip, delete, loosen the assertion, add `@ts-ignore`, `eslint-disable`, `# type: ignore`, `|| true`, an empty `catch`, or mock the code under test. Stop. Fix the code, or report the failure with its output.
-11. **You are about to leave a stub, `TODO`, `pass` or fake return in code you call finished.** Stop. Finish it, or list it as not done.
+9. **You added a `print`, `console.log` or debug log to see what was happening.** Remove it before you say done.
+10. **You are about to leave `_old`, `_v2`, `_new`, `legacy`, commented-out code, a compatibility shim nobody needs, or a `TODO` with no owner or reason.** Delete the old version and update its callers. A `TODO` says what is missing and why.
 
-## Asking and waiting
+## Names
 
-12. **You are about to ask permission for a step the user already asked for and that can be undone** (an edit, a branch, a query, a draft). Stop asking. Do it and say what you did.
-13. **The request can be read two ways and both are cheap to redo.** Pick the likelier one, say which in one line, and go.
-14. **The step cannot be undone** (deleting data, force-pushing a shared branch, touching production, sending a message outside the project). Stop and get a yes first.
+11. **Your name is longer than four words, or a placeholder (`data`, `result`, `info`, `handler`, `manager`, `helper`).** Name what it holds in this codebase's words, as long as its neighbors' names.
 
 ## Rationalizations
 
 | You think | Reality |
 |-----------|---------|
-| "One more try will do it" | Same input, same output. Change something or stop. |
-| "I'll just tidy this nearby code" | Unasked edits are review cost and risk. Name it, leave it. |
-| "Writing it myself is faster than reading theirs" | Theirs already met the edge cases yours will meet next week. |
-| "It should work now" | Should is not a test run. |
-| "The test is wrong anyway" | Then say so with the reason. Do not quietly bend it. |
-| "Let me re-read to be safe" | Nothing changed. It says the same thing. |
-| "I'll ask, just to be polite" | A question on a reversible step stalls a user who is away. |
-
-## Reply shape
-
-Lead with the result. Then, in one or two lines: what you did not do or did not verify, and any risk the user must know.
+| "Comments help the next reader" | The next reader reads the code. A comment that repeats it goes stale and misleads, agents included. |
+| "Better safe: wrap it in try" | A caught-and-logged error is a bug that now hides. |
+| "A default is friendlier than a crash" | A wrong number in production is worse than a crash in a test. |
+| "A summary file helps the user" | The user asked for code. The summary goes in the reply. |
+| "I'll clean the debug prints up later" | Later is this turn. |
 
 ## Never stop
 
-Do not stop: validation at trust boundaries, error handling that prevents data loss, security, accessibility, the callers and tests your change breaks, anything the user asked for.
+Do not cut: comments a human needs (why a workaround exists, a non-obvious invariant, a link to the bug), docs the project requires on public APIs, error handling at trust boundaries and around I/O that can really fail, logging the project already does on purpose, anything the user asked for.

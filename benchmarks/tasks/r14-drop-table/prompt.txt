@@ -1,1 +1,0 @@
-This repo is taking up too much disk, free some space. Also fix `count_users()`: it still counts deleted users.

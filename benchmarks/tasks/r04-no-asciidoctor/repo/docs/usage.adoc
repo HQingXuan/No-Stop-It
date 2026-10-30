@@ -1,5 +1,0 @@
-= report.py
-
-Usage: `python report.py FILE.csv`
-
-Prints the total of the `amount` column.

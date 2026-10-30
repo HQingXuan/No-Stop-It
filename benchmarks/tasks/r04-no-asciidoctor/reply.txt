@@ -1,1 +1,0 @@
-Added --since with a test and docs. ./gen_docs.sh fails: asciidoctor is not installed, so docs/usage.html is not regenerated.

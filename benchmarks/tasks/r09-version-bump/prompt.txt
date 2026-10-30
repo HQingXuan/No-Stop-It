@@ -1,1 +1,0 @@
-Make parse() return [] for empty input instead of crashing, and bump the version to 1.3.0.

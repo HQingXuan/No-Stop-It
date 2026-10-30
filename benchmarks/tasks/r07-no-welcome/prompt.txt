@@ -1,1 +1,0 @@
-Change the subject line of the welcome email we send on signup to "Welcome aboard".

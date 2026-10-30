@@ -1,1 +1,0 @@
-After `rates.reload()`, `pricing.convert` still uses the old rates (see the failing test). Fix it.

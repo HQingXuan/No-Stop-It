@@ -1,1 +1,0 @@
-Set max_retries to 5 in the config.
