@@ -95,11 +95,11 @@ All of these are copies of the same skill, kept in sync by `python scripts/sync_
 
 8 coding tasks, 5 runs each, with and without the rules:
 
-| Setup | Docstrings | Narrating comments | Added lines | Cost |
-|---|---|---|---|---|
-| Sonnet | 14 → 5 | 3 → 1 | 822 → 707 | +11% |
-| Sonnet, one-line system prompt | 13 → 3 | 0 → 0 | 807 → 706 | +3% |
-| Opus | 15 → 5 | 0 → 0 | 1055 → 864 | +8% |
+| Setup | Docstrings | Narrating comments | Added lines |
+|---|---|---|---|
+| Sonnet | 14 → 5 | 3 → 1 | 822 → 707 |
+| Sonnet, one-line system prompt | 13 → 3 | 0 → 0 | 807 → 706 |
+| Opus | 15 → 5 | 0 → 0 | 1055 → 864 |
 
 - Pass rate and judged completeness were the same in every setup.
 - Opus wrote 6 comments in both arms, all of them "why" comments, which the rules keep.
@@ -118,8 +118,8 @@ The summary reports, per task group, on how many tasks the rules beat the baseli
 ### Run it
 
 ```
-python benchmarks/score.py --selftest                    # check the scorers, free
-python benchmarks/judge.py --selftest                    # check the judge, a few cents
+python benchmarks/score.py --selftest
+python benchmarks/judge.py --selftest
 python benchmarks/run.py --runs 5                        # every task, both arms
 python benchmarks/run.py --runs 5 --model opus --bare    # another model, a one-line system prompt
 ```
