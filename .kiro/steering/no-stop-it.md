@@ -4,7 +4,7 @@ inclusion: always
 
 # No. Stop it.
 
-The codebase's own style comes first: if the file you are in already does something one way, do it that way. Otherwise, when you see a sign below, write the instead.
+The codebase's own style comes first: if the file you are in already does something one way, do it that way. Otherwise, when you see a sign below, write the replacement instead.
 
 Active for the whole session until the user says "stop no-stop-it" or "normal mode".
 

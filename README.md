@@ -111,7 +111,7 @@ All of these are copies of the same skill, kept in sync by `python scripts/sync_
 | Sonnet, one-line system prompt | 13 → 3 | 0 → 0 | 807 → 706 |
 | Opus | 15 → 5 | 0 → 0 | 1055 → 864 |
 
-- Pass rate and judged completeness were the same in every setup.
+- Pass rate and judged completeness were the same in every setup. One task, `ctl-csv`, failed in both arms for Sonnet with Claude Code's prompt.
 - Opus wrote 6 comments in both arms, all of them "why" comments, which the rules keep.
 - Emoji, broad `except`, leftovers and new `.md` files were 0 in both arms on these tasks.
 
@@ -127,6 +127,8 @@ The summary reports, per task group, on how many tasks the rules beat the baseli
 
 ### Run it
 
+`run.py` starts each session with an empty `HOME`, so sign in through `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` in the environment.
+
 ```
 python benchmarks/score.py --selftest
 python benchmarks/judge.py --selftest
@@ -134,7 +136,7 @@ python benchmarks/run.py --runs 5                        # every task, both arms
 python benchmarks/run.py --runs 5 --model opus --bare    # another model, a one-line system prompt
 ```
 
-Results land in `benchmarks/results/<time>/summary.md`.
+Results land in `benchmarks/results/<time>/summary.md`. The summaries already there come from the scorer at commit `72aa3c0`, which named the rules arm `style` and reported extra columns.
 
 <br>
 

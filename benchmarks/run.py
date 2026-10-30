@@ -61,10 +61,9 @@ def main():
     with ThreadPoolExecutor(a.jobs) as pool:
         list(pool.map(lambda j: cell(*j, out, a.model, a.budget, a.bare), jobs))
     (out.parent / "meta.json").write_text(json.dumps({"model": a.model, "runs": a.runs, "budget": a.budget, "arms": a.arms, "bare": a.bare}))
-    if any(t.name.startswith(("ctl-", "st-")) for t in tasks):
-        import judge  # judge imports this module, so not at the top
-        if judge.selftest():
-            judge.judge(out.parent)
+    import judge  # judge imports this module, so not at the top
+    if judge.selftest():
+        judge.judge(out.parent)
     print(score.report(out.parent))
 
 
