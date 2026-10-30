@@ -1,4 +1,4 @@
-"""Copy the body of skills/no-stop-it/SKILL.md into each agent's rules file.
+"""Copy the body of each skills/*/SKILL.md into the agents' rules files.
 
 python scripts/sync_rules.py           # rewrite the copies
 python scripts/sync_rules.py --check   # exit 1 if a copy is out of date
@@ -6,10 +6,11 @@ python scripts/sync_rules.py --check   # exit 1 if a copy is out of date
 import pathlib, sys
 
 ROOT = pathlib.Path(__file__).parents[1]
-BODY = (ROOT / "skills/no-stop-it/SKILL.md").read_text().split("---", 2)[2].strip() + "\n"
+body = lambda skill: (ROOT / "skills" / skill / "SKILL.md").read_text().split("---", 2)[2].strip()
+BODY = body("no-stop-it") + "\n\n" + body("no-stop-it-writing") + "\n"
 COPIES = {
     "AGENTS.md": BODY,  # Codex, Gemini CLI (via gemini-extension.json), Windsurf, Cline, opencode, Devin and most other agents
-    ".cursor/rules/no-stop-it.mdc": "---\ndescription: No-Stop-It style rules for code the agent writes.\nglobs:\nalwaysApply: true\n---\n\n" + BODY,
+    ".cursor/rules/no-stop-it.mdc": "---\ndescription: No-Stop-It rules for the code and the writing the agent produces.\nglobs:\nalwaysApply: true\n---\n\n" + BODY,
     ".github/copilot-instructions.md": BODY,
     ".kiro/steering/no-stop-it.md": "---\ninclusion: always\n---\n\n" + BODY,
 }
