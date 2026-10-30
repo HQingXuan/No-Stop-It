@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
 </p>
 
-<p align="center"><img src="assets/before-after.png" alt="The same task done by Opus without and with No-Stop-It: 23 lines with a docstring that repeats the code, versus 13 lines that pass the same tests" width="900"></p>
+<p align="center"><img src="assets/before-after.png" alt="The same dedupe CLI written by Opus without and with No-Stop-It: 57 lines with a six-line docstring, versus 34 lines that pass the same checks" width="900"></p>
 
 <p align="center"><sub>Inspired by <a href="https://github.com/DietrichGebert/ponytail">Ponytail</a>.</sub></p>
 
