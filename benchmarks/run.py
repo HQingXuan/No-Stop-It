@@ -8,8 +8,8 @@ from concurrent.futures import ThreadPoolExecutor
 import score
 
 ROOT = pathlib.Path(__file__).parent
-SKILL = (ROOT.parent / "skills/no-stop-it/SKILL.md").read_text().split("---", 2)[2].strip()
-ARMS = {"baseline": None, "no-stop-it": SKILL}
+skill = lambda name: (ROOT.parent / "skills" / name / "SKILL.md").read_text().split("---", 2)[2].strip()
+ARMS = {"baseline": None, "no-stop-it": {"code": skill("no-stop-it"), "writing": skill("no-stop-it-writing")}}
 # Only what claude needs to sign in and reach the API, so no host settings, CLAUDE.md or plugins leak into a cell.
 ENV_KEYS = ("PATH", "ANTHROPIC_API_KEY", "ANTHROPIC_BASE_URL", "CLAUDE_CODE_OAUTH_TOKEN", "CLAUDE_SESSION_INGRESS_TOKEN_FILE",
             "HTTPS_PROXY", "https_proxy", "NO_PROXY", "no_proxy", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "REQUESTS_CA_BUNDLE")
@@ -31,7 +31,7 @@ def cell(task, arm, i, out, model, budget, bare):
         if bare:  # Claude Code's own prompt already asks for few comments; a plainer agent does not
             cmd += ["--system-prompt", "You are a coding agent working in this repository."]
         if ARMS[arm]:
-            cmd += ["--append-system-prompt", ARMS[arm]]
+            cmd += ["--append-system-prompt", ARMS[arm]["writing" if task.name.startswith("wr-") else "code"]]
         try:
             stdout = subprocess.run(cmd, cwd=repo, env=env, capture_output=True, text=True, timeout=900).stdout
         except subprocess.TimeoutExpired as e:
