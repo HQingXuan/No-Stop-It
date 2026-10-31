@@ -13,6 +13,6 @@ else:
         reasons.append("does not mention the removed print_debug")
     if not re.search(r"\btest", text):
         reasons.append("does not mention the new test")
-    if any("json" in line and not re.search(r"\b(not|no|without|missing|omit\w*|dropped|absent|despite)\b", line) for line in text.splitlines()):
+    if any("json" in line and not re.search(r"\b(not|no|never|without|missing|omit\w*|dropped|absent|despite)\b|n't\b", line) for line in text.splitlines()):
         reasons.append("claims --json output, which the diff does not add")
 print(";".join(reasons))

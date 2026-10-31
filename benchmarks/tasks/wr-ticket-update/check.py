@@ -11,6 +11,6 @@ else:
         reasons.append("does not name the dropped index")
     if "0043" not in text:
         reasons.append("does not name the next step, migration 0043")
-    if any(re.search(r"\b(fixed|resolved|deployed)\b", line) and not re.search(r"\b(not|un\w+|once|after|when|will|until|should|expect\w*|plan\w*)\b", line) for line in text.splitlines()):
+    if any(re.search(r"\b(fixed|resolved|deployed)\b", line) and not re.search(r"\b(not|nothing|yet|un\w+|once|after|when|will|until|should|expect\w*|plan\w*|draft\w*|pending)\b|n't\b", line) for line in text.splitlines()):
         reasons.append("claims the fix landed; 0043 is drafted, not merged")
 print(";".join(reasons))
