@@ -47,7 +47,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 13. **You renamed or removed a flag, file, function, env var or value.** Grep for the old name in docs, comments, configs and examples. Fix every mention in the same change.
 14. **You are changing a version, count or name that another file also carries.** Change every copy.
-15. **Your diff mixes a rename or refactor with the behavior change, or passes about 400 changed lines.** Split it: the behavior change on its own, the refactor in its own change.
+15. **Your diff mixes a rename or refactor with the behavior change, or passes about 400 changed lines.** Put the refactor and the behavior change in separate commits. Finish the task, then tell the user where the diff could split into smaller PRs.
 
 ## Rationalizations
 

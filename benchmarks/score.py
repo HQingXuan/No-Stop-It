@@ -12,7 +12,7 @@ STYLE = {"comments": re.compile(r"^\+(?!\+\+)(\s*|.*\s)#(?!!)\s", re.M),
          "broad_except": re.compile(r"^\+\s*except\s*(\(?\s*(Base)?Exception\b[^:]*)?:", re.M),
          "leftovers": re.compile(r"^\+.*(\b(def|class)\s+\w+_(old|v2|new|legacy)\b|\bTODO\b|\bFIXME\b)", re.M)}
 # Prose counts on added lines of .md files, for the wr- tasks.
-PROSE = {"adverb_claims": re.compile(r"\b(thoroughly|carefully|fully|rigorously|extensively|comprehensively|properly|robust\w*)\b", re.I),
+PROSE = {"adverb_claims": re.compile(r"\b(thoroughly|carefully|fully|rigorously|extensively|comprehensively|properly)\s+(test|check|review|verif|validat|cover|handl)\w*|\brobust\w*", re.I),
          "caveat_heads": re.compile(r"^(#+\s*|\*\*)?(caveats?|notes?|disclaimers?|limitations?|assumptions?)(:?\*\*)?:?\s*$", re.I | re.M)}
 HABITS = (*STYLE, "docstrings", "new_md", *PROSE, "paragraphs")
 GROUPS = {"controls": lambda t: t.startswith("ctl-"), "style": lambda t: t.startswith("st-"), "writing": lambda t: t.startswith("wr-")}
@@ -173,6 +173,7 @@ def selftest():
           "+- thoroughly tested, note that it works\n+\n+## Caveats\n+\n+Notes:\n+\n+```\n+" + " ".join(["code"] * 50) + "\n+```\n+| a | b |\n")
     assert prose(pr) == {"adverb_claims": 1, "caveat_heads": 2, "paragraphs": 1, "words": 63}, prose(pr)
     assert prose("diff --git a/PR.md b/PR.md\n+**Notes:**\n")["caveat_heads"] == 1
+    assert prose("diff --git a/PR.md b/PR.md\n+fully qualified names, carefully reviewed\n")["adverb_claims"] == 1
     diff = "diff --git a/x.py b/x.py\n+++ b/x.py\n+a\ndiff --git a/y.py b/y.py\n-b\n+c\n"
     assert unrelated(diff, {"x.py"}) == 2
     assert sign_p(5, 0) == 0.0625 and sign_p(3, 3) == 1.0 and sign_p(0, 0) == 1.0

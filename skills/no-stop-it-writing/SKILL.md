@@ -46,7 +46,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 ## Hands off the send button
 
-17. **You are about to publish, post, push, merge or send anything a person will receive: a review, a reply, a ticket comment, a message.** Draft it, show it, stop. The user sends.
+17. **You are about to publish, post, push, merge or send anything a person will receive (a review, a reply, a ticket comment, a message), and the user did not ask you to.** Draft it, show it, stop. The user sends. When they asked, do it.
 18. **The user named where to post.** Post there and nowhere else.
 
 ## Rationalizations
