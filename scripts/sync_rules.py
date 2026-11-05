@@ -7,6 +7,7 @@ import pathlib, sys
 
 ROOT = pathlib.Path(__file__).parents[1]
 body = lambda skill: (ROOT / "skills" / skill / "SKILL.md").read_text().split("---", 2)[2].strip()
+# Only the two always-on skills are copied. no-stop-it-docs, -hld and -lld load on demand (see README).
 BODY = body("no-stop-it") + "\n\n" + body("no-stop-it-writing") + "\n"
 COPIES = {
     "AGENTS.md": BODY,  # Codex, Gemini CLI (via gemini-extension.json), Windsurf, Cline, opencode, Devin and most other agents

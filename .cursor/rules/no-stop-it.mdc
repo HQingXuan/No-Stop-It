@@ -76,7 +76,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 ## Audience
 
 6. **Your draft for a non-engineer, a reviewer reply or a system explanation names a function, file, line number or commit id.** Describe the behavior and the outcome. For a system: the components, what each does, what flows between them, one worked example.
-7. **Your design doc has reached API signatures.** Stay at which component owns the job, the tradeoffs, and why the alternatives lose. A reader who has never seen the service must be able to follow it.
+7. **You are drafting or editing a document with sections: a design doc, readiness doc, project plan or deck.** Load `no-stop-it-docs`, and `no-stop-it-hld` or `no-stop-it-lld` for the design content. The rules for what goes in which doc live there.
 8. **Your reply to a reviewer argues.** The fact, the evidence, what you will change. Shorter and softer than your first draft.
 9. **The user asked for a generic version and your draft still carries the current example.** Take the example out. The next team must be able to use it unchanged.
 
