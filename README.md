@@ -57,12 +57,24 @@ A second skill, `no-stop-it-writing`, does the same for what the agent writes to
 | Group | Stops |
 |-------|-------|
 | **Length and shape** | paragraph commit messages and PR descriptions, dense blocks that are hard to follow, tables with columns only the code can explain, "Caveats" sections, reasoning when a yes/no or a list was asked for |
-| **Audience** | function names and line numbers in text for non-engineers, design docs that reach API signatures, replies to reviewers that argue, "generic" drafts that still carry the current example |
+| **Audience** | function names and line numbers in text for non-engineers, replies to reviewers that argue, "generic" drafts that still carry the current example; documents with sections hand off to the three document skills below |
 | **Substance** | findings that name the symptom instead of the mechanism, option comparisons that are deep dives instead of cost, risk and time per option, descriptions that claim what the diff does not contain, a reading of an ambiguous request taken silently |
 | **Before you claim** | "thoroughly tested" instead of the acts performed, inferred facts written as facts, links built from a name, load-bearing or relayed claims that were never checked |
 | **Hands off the send button** | publishing, posting or sending anything on the user's behalf; posting somewhere other than where the user said |
 
 Read the full list: [`skills/no-stop-it-writing/SKILL.md`](skills/no-stop-it-writing/SKILL.md). The benchmark has three writing tasks for it, not yet run.
+
+### Documents and design docs
+
+Three on-demand skills for documents a team reads and keeps. They load when the agent drafts or edits a document with sections, not on every turn.
+
+| Skill | Covers |
+|-------|--------|
+| [`no-stop-it-docs`](skills/no-stop-it-docs/SKILL.md) | any document: what goes in the body, an appendix or your own notes; tables for numbers and paragraphs for reasoning; sweeping cross-references and stale numbers after an edit; following the team's template and the previous doc; not doubling a doc during review |
+| [`no-stop-it-hld`](skills/no-stop-it-hld/SKILL.md) | the high-level design: a decision document for people who must agree to the approach. Sections with a "done when" for each, decisions as one question per choice point with lettered options and a verdict, cons that name the thing that kills an option, the north star, what takes the system down, estimates with how they were made |
+| [`no-stop-it-lld`](skills/no-stop-it-lld/SKILL.md) | the low-level design: how each chosen component does its job, for the engineers who build and review it. One annotated sample item instead of a schema table, gates in code order on the sequence diagram, timeout and miss behavior per call, capacity arithmetic shown once, no file lists |
+
+The boundary between the two, from `no-stop-it-hld`: ask of every sentence which pieces it touches. Several, or the choice between them, is the HLD; the inside of one is the LLD. Deleting an HLD sentence would change which option a reviewer picks; deleting an LLD sentence would change what an engineer types. The line moves with scale, so each skill says when one doc with two sections is enough and when to split.
 
 <br>
 
@@ -114,7 +126,17 @@ gemini extensions install https://github.com/HQingXuan/No-Stop-It
 
 No-Stop-It is plain text, so it works with any model. Run the model in one of the agents above, or put [`AGENTS.md`](AGENTS.md) in its system prompt.
 
-All of these are copies of the same two skills, kept in sync by `python scripts/sync_rules.py`.
+All of these are copies of the same two always-on skills, kept in sync by `python scripts/sync_rules.py`.
+
+### The document skills
+
+`no-stop-it-docs`, `no-stop-it-hld` and `no-stop-it-lld` are not in the always-on copies; they are meant to load when a document is being written. The Claude Code plugin ships them. For Kiro, install them as skills:
+
+```
+for s in no-stop-it-docs no-stop-it-hld no-stop-it-lld; do mkdir -p ~/.kiro/skills/$s && curl -fsSL https://raw.githubusercontent.com/HQingXuan/No-Stop-It/main/skills/$s/SKILL.md -o ~/.kiro/skills/$s/SKILL.md; done
+```
+
+For any other agent, paste the relevant `SKILL.md` into the conversation when you start a doc.
 
 <br>
 
@@ -170,6 +192,8 @@ Results land in `benchmarks/results/<time>/summary.md`. The summaries already th
 The habits come from [deslop](https://github.com/dabit3/deslop), [beagle](https://skills.cat/skills/existential-birds/beagle/llm-artifacts-detection), and user complaints about [emoji in headings](https://claudeissues.com/issue/3567-markdown-header-emoji-removal-prevent-emoji-in-documentation-sections), [unrequested .md files](https://forum.cursor.com/t/claude-models-with-cursor-constantly-wastefully-generate-md-docs-files-violating-rules/147673) and [silent fallbacks](https://hyperdev.matsuoka.com/p/bad-habit-of-agentic-coders-part). The test, diff and claim rules come from what reviewers report: [a study of 1,154 developer posts on AI slop](https://arxiv.org/abs/2603.27249), [a survey of 10,000 CLAUDE.md files](https://wonderingaboutai.substack.com/p/i-analyzed-10000-claudemd-files-to), and [deslop 2](https://github.com/agent-sh/deslop)'s finding that current models leave stale mentions of what they renamed, not debug prints.
 
 An earlier version of No-Stop-It was an engineering stop list (retry loops, polling, bending tests). Its benchmark showed current models already avoid most of those moves, so this one replaced it. It is still in the git history.
+
+The document skills take their section lists and the HLD/LLD split from [Design Docs at Google](https://www.industrialempathy.com/posts/design-docs-at-google/) (context and scope, goals and non-goals, alternatives as the most important section, sketch APIs and schemas instead of pasting them, and its warning that a design doc which is only an implementation manual did not need writing), the [C4 model](https://c4model.com/diagrams)'s four zoom levels, which the skills map onto the HLD (context, container) and the LLD (component, dynamic), [a boundary article](https://www.codingshuttle.com/low-level-system-design-lld-handbook/high-level-vs-low-level-design-drawing-the-boundary/) whose one test is "which of my pieces does it touch", several internal design templates and a senior engineer's design-review checklist from the author's workplace, and the author's own design reviews, where the corrections were: keep schema and observability but drop package and class lists, paragraphs unless a table is asked for, options as pros and cons with a verdict, diagrams at the component level in the team's style, and sweep the doc after every edit.
 
 <br>
 
