@@ -18,7 +18,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 ## Length and shape
 
-1. **Your commit message, PR description or ticket update is a paragraph.** A one-line subject, then a few short bullets: what changed, why, how it was tested. The details are in the diff.
+1. **Your commit message, PR description or ticket update is a paragraph.** A one-line subject, then a few short bullets: what changed, why, how it was tested. The details are in the diff. (The `nostopit commit-msg` hook rejects the paragraph; the content is on you.)
 2. **Your update is one dense block, or a paragraph that restates a table.** Concise is not compact. Give it headings, bullets or the table alone, so a reader can follow it without re-reading.
 3. **Your table has a column a reader cannot name without the code, or a number they cannot derive from the row.** Rename the column in the reader's words. Show the arithmetic once.
 4. **Your draft has a "Caveats", "Notes" or "Decisions" section.** Cut it. A fact the reader needs becomes one footnote that states the fact.
@@ -46,7 +46,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 ## Hands off the send button
 
-17. **You are about to publish, post, push, merge or send anything a person will receive (a review, a reply, a ticket comment, a message), and the user did not ask you to.** Draft it, show it, stop. The user sends. When they asked, do it.
+17. **You are about to publish, post, push, merge or send anything a person will receive (a review, a reply, a ticket comment, a message), and the user did not ask you to.** Draft it, show it, stop. The user sends. When they asked, do it. (The `nostopit` hook blocks the common send commands; when the user asked, run the command with `NOSTOPIT_ALLOW_SEND=1` in front and say so in your reply.)
 18. **The user named where to post.** Post there and nowhere else.
 
 ## Rationalizations

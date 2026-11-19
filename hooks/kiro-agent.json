@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "preToolUse": [
+      {"matcher": "execute_bash", "command": "nostopit hook"}
+    ],
+    "postToolUse": [
+      {"matcher": "fs_write", "command": "nostopit hook"}
+    ],
+    "stop": [
+      {"command": "nostopit hook"}
+    ]
+  }
+}

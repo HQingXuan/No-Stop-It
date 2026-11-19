@@ -15,33 +15,29 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 1. **Your comment says what the next line does.** Write no comment. Only comment a reason the code cannot show, in one line.
 2. **You are about to write Args/Returns docs for a function whose name and signature already say it.** Write one line, or nothing.
 3. **Your comment mentions the change itself** ("updated to", "now uses", "fixed", "new", "removed"), **or cites the ticket, requirement or review round that asked for it.** Describe the code as it is now. The change and its ticket go in the commit message.
-4. **You are about to create a summary, notes or plan file nobody asked for** (`SUMMARY.md`, `IMPLEMENTATION.md`, `CHANGES.md`). Put it in your reply.
-5. **You are about to type an emoji** in code, a comment, a log line, a commit message or a heading. Use the plain word.
 
 ## Errors
 
-6. **You are about to wrap code in `try` that only logs, prints or re-raises a vaguer error.** Let it raise. Catch only the specific exception you can actually handle here.
-7. **On failure, your code returns `0`, `None`, `""`, an empty list or a default, or quietly tries another way.** Raise, or return an error the caller has to look at. A fallback only when the user asked for one, named in your reply.
-8. **You are about to check a value that cannot be missing, re-check input already validated, or compare to `True`.** Drop the check.
+4. **You are about to wrap code in `try` that only logs, prints or re-raises a vaguer error.** Let it raise. Catch only the specific exception you can actually handle here.
+5. **On failure, your code returns `0`, `None`, `""`, an empty list or a default, or quietly tries another way.** Raise, or return an error the caller has to look at. A fallback only when the user asked for one, named in your reply.
+6. **You are about to check a value that cannot be missing, re-check input already validated, or compare to `True`.** Drop the check.
 
-## Leftovers
+## Leftovers and names
 
-9. **You added a `print`, `console.log` or debug log to see what was happening.** Remove it before you say done.
-10. **You are about to leave `_old`, `_v2`, `_new`, `legacy`, commented-out code, a compatibility shim nobody needs, or a `TODO` with no owner or reason.** Delete the old version and update its callers. A `TODO` says what is missing and why.
-
-## Names
-
-11. **Your name is longer than four words, or a placeholder (`data`, `result`, `info`, `handler`, `manager`, `helper`).** Name what it holds in this codebase's words, as long as its neighbors' names.
+7. **You added a `print`, `console.log` or debug log to see what was happening.** Remove it before you say done.
+8. **Your name is a placeholder (`data`, `result`, `info`, `handler`, `manager`, `helper`).** Name what it holds in this codebase's words.
 
 ## Tests
 
-12. **Your test asserts on a mock (that it was called, or returned what you fed it), or computes its expected value with the code under test.** Write the expected value by hand and assert the result. If flipping a condition in the source would not fail the test, it is not a test.
+9. **Your test computes its expected value with the code under test, or only checks that a call happened.** Write the expected value by hand and assert the result. If flipping a condition in the source would not fail the test, it is not a test.
 
 ## The diff
 
-13. **You renamed or removed a flag, file, function, env var or value.** Grep for the old name in docs, comments, configs and examples. Fix every mention in the same change.
-14. **You are changing a version, count or name that another file also carries.** Change every copy.
-15. **Your diff mixes a rename or refactor with the behavior change, or passes about 400 changed lines.** Put the refactor and the behavior change in separate commits. Finish the task, then tell the user where the diff could split into smaller PRs.
+10. **Your diff mixes a rename or refactor with the behavior change.** Put the refactor and the behavior change in separate commits.
+
+## Checked by the tool, not by you
+
+The `nostopit` checker runs from the agent hook, pre-commit and CI and reports these with the fix in the message: emoji, notes files nobody asked for, comments that cite a review or a ticket, commented-out code, `_old`/`_v2` names, TODOs with no reason, names over four words, tests with no assertion or only mock assertions, names removed but still mentioned elsewhere, a version changed in one file and not its copies, new dependencies, diffs past 400 lines. When it fires, fix the cause. `# nostopit: allow <rule>` exists for the real exception and is counted in the report; a reviewer reads that count.
 
 ## Rationalizations
 
@@ -50,10 +46,9 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 | "Comments help the next reader" | The next reader reads the code. A comment that repeats it goes stale and misleads, agents included. |
 | "Better safe: wrap it in try" | A caught-and-logged error is a bug that now hides. |
 | "A default is friendlier than a crash" | A wrong number in production is worse than a crash in a test. |
-| "A summary file helps the user" | The user asked for code. The summary goes in the reply. |
 | "I'll clean the debug prints up later" | Later is this turn. |
 | "The test proves the call happened" | It proves the mock works. Flip the condition; nothing fails. |
-| "One big diff is less overhead" | Past 400 lines the reviewer stops reading and starts stamping. |
+| "The checker is wrong here, I'll allow it" | Sometimes. The allow count is on the report the reviewer reads. |
 
 ## Never stop
 
@@ -67,7 +62,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 ## Length and shape
 
-1. **Your commit message, PR description or ticket update is a paragraph.** A one-line subject, then a few short bullets: what changed, why, how it was tested. The details are in the diff.
+1. **Your commit message, PR description or ticket update is a paragraph.** A one-line subject, then a few short bullets: what changed, why, how it was tested. The details are in the diff. (The `nostopit commit-msg` hook rejects the paragraph; the content is on you.)
 2. **Your update is one dense block, or a paragraph that restates a table.** Concise is not compact. Give it headings, bullets or the table alone, so a reader can follow it without re-reading.
 3. **Your table has a column a reader cannot name without the code, or a number they cannot derive from the row.** Rename the column in the reader's words. Show the arithmetic once.
 4. **Your draft has a "Caveats", "Notes" or "Decisions" section.** Cut it. A fact the reader needs becomes one footnote that states the fact.
@@ -95,7 +90,7 @@ Active for the whole session until the user says "stop no-stop-it" or "normal mo
 
 ## Hands off the send button
 
-17. **You are about to publish, post, push, merge or send anything a person will receive (a review, a reply, a ticket comment, a message), and the user did not ask you to.** Draft it, show it, stop. The user sends. When they asked, do it.
+17. **You are about to publish, post, push, merge or send anything a person will receive (a review, a reply, a ticket comment, a message), and the user did not ask you to.** Draft it, show it, stop. The user sends. When they asked, do it. (The `nostopit` hook blocks the common send commands; when the user asked, run the command with `NOSTOPIT_ALLOW_SEND=1` in front and say so in your reply.)
 18. **The user named where to post.** Post there and nowhere else.
 
 ## Rationalizations

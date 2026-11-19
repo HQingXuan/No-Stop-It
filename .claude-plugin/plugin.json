@@ -1,7 +1,7 @@
 {
   "name": "no-stop-it",
-  "version": "0.5.0",
-  "description": "Stop lists for agent-written code, for what the agent writes to people, and for the documents it drafts: a general document skill plus high-level and low-level design skills with the boundary between them.",
+  "version": "0.6.0",
+  "description": "Stop lists for agent-written code, for what the agent writes to people, and for documents, plus the nostopit checker that enforces the mechanical half from the agent's hooks.",
   "author": {
     "name": "HQingXuan",
     "url": "https://github.com/HQingXuan"

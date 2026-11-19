@@ -8,6 +8,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pytest
+      - run: pip install pytest -e .
       - run: python scripts/sync_rules.py --check
+      - run: python -m nostopit --selftest
       - run: python benchmarks/score.py --selftest
+      - run: git fetch --no-tags origin main && nostopit diff --base origin/main --no-untracked

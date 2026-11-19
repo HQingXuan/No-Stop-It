@@ -6,14 +6,9 @@ python benchmarks/score.py benchmarks/results/<stamp>
 import collections, json, math, pathlib, random, re, shutil, statistics, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).parent
-# Style counts on added lines of code files.
-STYLE = {"comments": re.compile(r"^\+(?!\+\+)(\s*|.*\s)#(?!!)\s", re.M),
-         "emoji": re.compile(r"^\+.*[\U0001F300-\U0001FAFF\u2600-\u27BF\u2B50]", re.M),
-         "broad_except": re.compile(r"^\+\s*except\s*(\(?\s*(Base)?Exception\b[^:]*)?:", re.M),
-         "leftovers": re.compile(r"^\+.*(\b(def|class)\s+\w+_(old|v2|new|legacy)\b|\bTODO\b|\bFIXME\b)", re.M)}
-# Prose counts on added lines of .md files, for the wr- tasks.
-PROSE = {"adverb_claims": re.compile(r"\b(thoroughly|carefully|fully|rigorously|extensively|comprehensively|properly)\s+(test|check|review|verif|validat|cover|handl)\w*|\brobust\w*", re.I),
-         "caveat_heads": re.compile(r"^(#+\s*|\*\*)?(caveats?|notes?|disclaimers?|limitations?|assumptions?)(:?\*\*)?:?\s*$", re.I | re.M)}
+sys.path.insert(0, str(ROOT.parent))
+from nostopit.checks import STYLE, PROSE, style, prose  # the same regexes the hook enforces, so the benchmark measures what the hook checks
+
 HABITS = (*STYLE, "docstrings", "new_md", *PROSE, "paragraphs")
 GROUPS = {"controls": lambda t: t.startswith("ctl-"), "style": lambda t: t.startswith("st-"), "writing": lambda t: t.startswith("wr-")}
 # metric -> (aggregate over a task's cells, effect: "diff" of rates or "ratio" of medians, True if higher is better)
@@ -40,38 +35,6 @@ def unrelated(diff, allowed):
         elif not keep and line[:1] in "+-" and not line.startswith(("+++", "---")):
             n += 1
     return n
-
-
-def style(diff):
-    """Counts of each STYLE habit in added lines of code files, plus new .md files."""
-    code = "".join(f for f in re.split(r"(?=^diff --git )", diff, flags=re.M) if not re.match(r"diff --git \S+ \S+\.md\n", f))
-    out = {k: len(r.findall(code)) for k, r in STYLE.items()}
-    out["docstrings"] = sum(len(re.findall(r'"""|\'\'\'', line)) for line in code.splitlines() if line.startswith("+")) // 2
-    out["new_md"] = len(re.findall(r"^diff --git a/\S+\.md b/\S+\nnew file mode", diff, re.M))
-    return out
-
-
-def prose(diff):
-    """Counts of each PROSE habit in added lines of .md files outside code fences, paragraphs of 40 words or more, and words."""
-    md = "".join(f for f in re.split(r"(?=^diff --git )", diff, flags=re.M) if re.match(r"diff --git \S+ \S+\.md\n", f))
-    lines, fenced = [], False
-    for line in md.splitlines():
-        if not line.startswith("+") or line.startswith("+++"):
-            continue
-        if line[1:].lstrip().startswith("```"):
-            fenced = not fenced
-        elif not fenced:
-            lines.append(line[1:])
-    text = "\n".join(lines)
-    blocks, run = [], []
-    for line in lines + [""]:
-        if line.strip() and not re.match(r"\s*([-*>|#]|\d+\.)", line):
-            run.append(line)
-        else:
-            blocks.append(" ".join(run))
-            run = []
-    out = {k: len(r.findall(text)) for k, r in PROSE.items()}
-    return out | {"paragraphs": sum(len(b.split()) >= 40 for b in blocks), "words": len(text.split())}
 
 
 def cell(path, task):

@@ -29,22 +29,73 @@ AI code is easy to spot, and tiresome to review, because of a handful of habits:
 - A README that still names the flag the change deleted.
 - "Thoroughly tested" in a PR description.
 
-No-Stop-It gives your agent one rule for each. Every rule is **a sign you can observe → what to write instead**, so the agent knows exactly when it applies and has a replacement, not only a ban.
+No-Stop-It gives your agent one rule for each. Every rule is **a sign you can observe → what to write instead**, so the agent knows exactly when it applies and has a replacement, not only a ban. Where the sign is mechanical, a checker enforces it from the agent's own hooks and the rule leaves the prose.
+
+<br>
+
+## Enforce it
+
+A rule in a markdown file binds when the model happens to follow it. A check in a hook binds every time, costs no context tokens until it fires, and comes back with the fix in the message. So the mechanical half of the rules is code: `nostopit`, a stdlib-only Python checker that runs on the diff from the agent's hooks, from pre-commit and from CI, and the prose rules keep only what needs judgment.
+
+```
+pip install git+https://github.com/HQingXuan/No-Stop-It
+nostopit diff                 # the working tree against HEAD, plus untracked files
+nostopit file src/app.py      # one file
+nostopit commit-msg .git/COMMIT_EDITMSG
+```
+
+| Check | Fires on | Level |
+|---|---|---|
+| `emoji` | an emoji in code, a comment or a commit message | error |
+| `summary_file` | a new `SUMMARY.md`, `NOTES.md`, `PLAN.md`, `CHANGES.md` | error |
+| `assertless_test`, `mock_only_test` | a Python test touched by the diff that has no assertion, or only `assert_called*`/`call_count` | error |
+| `provenance_comment` | a comment that cites a reviewer, a ticket id or "previously" | warn |
+| `commented_code` | a comment that parses as code | warn |
+| `leftover_name`, `todo_without_reason` | `parse_old`, `_v2`; a TODO with no why | warn |
+| `long_name` | a definition over four words, unless the file's own names already run long | warn |
+| `broad_except` | `except Exception:` | warn |
+| `stale_mention` | a definition, flag or file removed by the diff whose name still appears elsewhere in the repo | warn |
+| `duplicated_version` | a version changed in one manifest while another still has the old value | warn |
+| `new_dependency` | a dependency added to a manifest (bumps are not flagged) | warn |
+| `big_diff` | more than 400 changed lines | warn |
+| `adverb_claim`, `caveat_heading` | an adverb in front of "tested" or "reviewed", a "Caveats:" heading, in a `.md` file or a commit body | warn |
+| `commit_subject`, `commit_paragraph` | a subject over 72 characters, a 40-word paragraph in the body | error |
+
+Every message says what to do instead. `--off RULE` switches one off per repo; `# nostopit: allow <rule>` on a line is the escape hatch for the real exception, and the report prints how many lines used it, so a sprayed allow is visible to the reviewer.
+
+### In the agent's loop
+
+The hook is what turns a check into enforcement: the agent edits, the check runs, the findings come back as the next thing the agent reads.
+
+**Claude Code**: merge [`hooks/claude-code.json`](hooks/claude-code.json) into `.claude/settings.json`. `PostToolUse` on Edit/Write runs `nostopit file` on the file and returns every finding (exit 2, stderr to the model). `Stop` runs `nostopit diff` and refuses to stop on an error, once (`stop_hook_active` ends the loop). `PreToolUse` on Bash is the send gate.
+
+**Kiro CLI**: merge [`hooks/kiro-agent.json`](hooks/kiro-agent.json) into your agent's JSON. Same three events, same exit codes. The `postToolUse` payload shape was checked against a live Kiro session; the `preToolUse` block-on-exit-2 contract is per the Kiro CLI hooks documentation.
+
+**Humans and CI**: `.pre-commit-hooks.yaml` ships two hooks (`nostopit` on the staged diff, `nostopit-commit-msg`), and this repo's own CI runs `nostopit diff --base origin/main` on every PR.
+
+### The send gate
+
+Publishing is the one rule whose violation cannot be undone, so it is a gate, not a sentence. `nostopit hook` on a shell command blocks `git push`, `gh pr create|merge|comment|review`, `npm publish`, `twine upload`, `cargo publish`, `--publish` and `publish=true`, and tells the agent to show the command and ask. When the user did ask, the agent runs it with `NOSTOPIT_ALLOW_SEND=1` in front, which is visible in the transcript. An agent with a shell can always do that; the gate's job is to make sending a deliberate, loud act instead of a reflex. `NOSTOPIT_SEND_EXTRA` takes a regex for your own tools.
+
+### What stays prose
+
+Judgment. Whether a comment narrates or explains, whether a fallback hides a bug, whether a name is a placeholder in this codebase, whether a test's expected value came from the code under test, whether a refactor is mixed into a behavior change, who the reader is. The code skill went from 15 rules to 10 when the checker took the rest; the writing and document skills are judgment almost throughout and stayed.
+
+This split follows Lauren Tan's ["All Code Is Slop (Except Mine)"](https://ai.engineer/code/2026/talks/lauren-tan) (AI Engineer CODE 2026): spend first on what the codebase and its lint rules, types and tests make impossible, then on verification, and last on prose for what needs judgment; and turn each correction you make to an agent into a deterministic check rather than another line in the rules file. Two of her observations apply to this repo directly. Agents over-rotate on a small correction and treat it as a hard rule forever, which is what a rules file mined from corrections risks. And agents use comments and markdown to justify not doing the right thing, which is why the allow marker is counted.
 
 <br>
 
 ## The rules
 
-The code skill, `no-stop-it`, has 15 rules in six groups:
+The code skill, `no-stop-it`, has 10 rules in five groups, plus a note on what the checker covers:
 
 | Group | Stops |
 |-------|-------|
-| **Comments and docs** | narrating comments, boilerplate docstrings, comments about the edit itself or the ticket behind it, summary files, emoji |
+| **Comments and docs** | narrating comments, boilerplate docstrings, comments about the edit itself or the ticket behind it |
 | **Errors** | `try` that only logs, silent fallbacks, checks on values that cannot be missing |
-| **Leftovers** | debug prints, `_old` / `_v2` copies, commented-out code, TODOs with no reason |
-| **Names** | names longer than four words, or placeholders like `data` and `helper` |
-| **Tests** | tests that assert on a mock, or compute the expected value with the code under test |
-| **The diff** | stale mentions of a renamed or removed name, a version changed in one copy, refactors mixed into a behavior change, diffs past about 400 lines |
+| **Leftovers and names** | debug prints, placeholder names like `data` and `helper` |
+| **Tests** | tests that compute the expected value with the code under test, or only check that a call happened |
+| **The diff** | refactors mixed into a behavior change |
 
 The codebase's own style always comes first. A closing "never stop" list keeps the comments, docs and error handling that matter: why a workaround exists, public API docs the project requires, handling at trust boundaries.
 
@@ -126,7 +177,7 @@ gemini extensions install https://github.com/HQingXuan/No-Stop-It
 
 No-Stop-It is plain text, so it works with any model. Run the model in one of the agents above, or put [`AGENTS.md`](AGENTS.md) in its system prompt.
 
-All of these are copies of the same two always-on skills, kept in sync by `python scripts/sync_rules.py`.
+All of these are copies of the same two always-on skills, kept in sync by `python scripts/sync_rules.py`. The checker is separate: see [Enforce it](#enforce-it).
 
 ### The document skills
 
@@ -160,7 +211,7 @@ For any other agent, paste the relevant `SKILL.md` into the conversation when yo
 
 Each task runs in a fresh repo as a headless `claude -p` session. For every run, the benchmark:
 
-1. Counts the style habits in the diff: narrating comments, docstrings, emoji, broad `except`, leftovers, new `.md` files. For the three writing tasks (`wr-`): paragraphs of 40 words or more, adverb claims ("thoroughly tested"), caveat headings, and words.
+1. Counts the style habits in the diff with the same regexes the `nostopit` checker enforces (`nostopit/checks.py`): narrating comments, docstrings, emoji, broad `except`, leftovers, new `.md` files. For the three writing tasks (`wr-`): paragraphs of 40 words or more, adverb claims (an adverb in front of "tested"), caveat headings, and words. A `hooks` arm, where the checker runs in the agent's hooks instead of the rules being in its context, is the next experiment to run.
 2. Checks that the task works, including a probe that a missing file or a broken database raises instead of falling back silently. The writing tasks check facts instead: the PR description does not claim the `--json` flag the patch subject lies about, the ticket update names the dropped index and the next migration without saying the fix landed, the reviewer reply answers from the code instead of agreeing with the reviewer's wrong guess.
 3. Asks a blind judge how much of the task was delivered, 0 to 3, so rules that make the agent do less would show up.
 
