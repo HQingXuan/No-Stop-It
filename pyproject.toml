@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nostopit"
+version = "0.6.0"
+description = "Checks for the enforceable half of the No-Stop-It rules: run them from agent hooks, pre-commit and CI."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+
+[project.scripts]
+nostopit = "nostopit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/HQingXuan/No-Stop-It"
+
+[tool.setuptools]
+packages = ["nostopit"]

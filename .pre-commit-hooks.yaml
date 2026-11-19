@@ -1,0 +1,13 @@
+- id: nostopit
+  name: no-stop-it
+  description: The enforceable No-Stop-It rules on the staged diff.
+  entry: nostopit diff --staged
+  language: python
+  pass_filenames: false
+  always_run: true
+- id: nostopit-commit-msg
+  name: no-stop-it commit message
+  description: One-line subject, short bullets, no adverbs standing in for evidence.
+  entry: nostopit commit-msg
+  language: python
+  stages: [commit-msg]
